@@ -77,7 +77,17 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
                     </div>
 
                     {/* Conversations List */}
-                    <nav className="flex-grow overflow-y-auto space-y-2 mb-6 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent">
+                    <nav className="flex-grow overflow-y-auto space-y-2 mb-6 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent"
+                    style={{
+                        scrollbarWidth: 'none', 
+                        msOverflowStyle: 'none'
+                    }}
+                >
+                    <style jsx>{`
+                        main::-webkit-scrollbar {
+                            display: none;
+                        }
+                    `}</style>
                         {conversations.length === 0 ? (
                             <div className="text-center py-8">
                                 <div className="text-3xl mb-2">💭</div>
