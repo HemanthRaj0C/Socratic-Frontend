@@ -1,0 +1,261 @@
+// src/components/layout/PageLayout.tsx
+'use client';
+
+import Aurora from '@/components/Aurora/Aurora';
+import Threads from '@/components/Threads/Threads';
+import Footer from '@/components/layout/Footer';
+import FlowingMenu from '@/components/FlowingMenu/FlowingMenu';
+import PixelCard from '@/components/PixelCard/PixelCard';
+import CardSwap, { Card } from '@/components/CardSwap/CardSwap';
+
+interface PageLayoutProps {
+  children: React.ReactNode;
+}
+
+export default function PageLayout({ children }: PageLayoutProps) {
+  // Technical features data for the flowing menu
+  const technicalFeatures = [
+    {
+      link: "",
+      text: "Built on Mistral AI Foundation",
+      image: "" // You can replace with actual Mistral logo
+    },
+    {
+      link: "",
+      text: "Fine-tuned for Socratic Method",
+      image: "" // Educational/brain icon
+    },
+    {
+      link: "",
+      text: "Redis for Lightning-Fast Responses",
+      image: "" // Redis logo
+    },
+    {
+      link: "",
+      text: "Firebase for Reliable Data Storage",
+      image: "" // Firebase logo
+    },
+    {
+      link: "",
+      text: "Real-time Conversational Learning",
+      image: "" // Chat/conversation icon
+    },
+    {
+      link: "",
+      text: "Adaptive Questioning Algorithm",
+      image: "" // Algorithm/AI icon
+    }
+  ];
+
+  return (
+    <div className="min-h-screen relative text-white overflow-x-hidden">
+      {/* Aurora Background */}
+      <div className="absolute inset-0 z-0">
+        <Aurora 
+          colorStops={["#1e3a8a", "#7c3aed", "#0891b2"]}
+          amplitude={1.2}
+          blend={0.4}
+        />
+      </div>
+      
+      {/* Content Overlay */}
+      <div className="relative z-10">
+        {children}
+
+        {/* Developer Information Section */}
+        <section className="w-full py-12 px-6 flex gap-10">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              Crafted with Excellence
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
+              
+              {/* Developer Info Card */}
+              <PixelCard 
+                variant="blue"
+                className='bg-black/30 backdrop-blur-sm'
+              >
+                <div className="text-center absolute">
+                  <div className="text-4xl mb-4">👨‍💻</div>
+                  <h3 className="text-xl font-bold mb-2">Hemanth Raj</h3>
+                  <p className="text-blue-400 font-semibold mb-3">Lead Developer & AI Engineer</p>
+                  <p className="text-gray-300 text-sm mb-4">
+                    Passionate about creating intelligent educational systems that transform learning experiences through innovative AI technology.
+                  </p>
+                  <div className="flex justify-center space-x-4">
+                    <a href="#" className="text-blue-400 hover:text-blue-300 transition-colors">
+                      <span className="text-sm">LinkedIn</span>
+                    </a>
+                    <a href="#" className="text-blue-400 hover:text-blue-300 transition-colors">
+                      <span className="text-sm">GitHub</span>
+                    </a>
+                  </div>
+                </div>
+              </PixelCard>
+
+              {/* Project Info Card */}
+              <PixelCard 
+                variant="pink"
+                className='bg-black/30 backdrop-blur-sm'
+              >
+                <div className="text-center absolute">
+                  <div className="text-4xl mb-4">🚀</div>
+                  <h3 className="text-xl font-bold mb-2">Project Vision</h3>
+                  <p className="text-pink-400 font-semibold mb-3">Revolutionizing Education</p>
+                  <p className="text-gray-300 text-sm mb-4">
+                    Built with cutting-edge technology stack including Next.js, TypeScript, Firebase, and fine-tuned AI models to deliver exceptional learning experiences.
+                  </p>
+                  <div className="text-xs text-gray-400 space-y-1">
+                    <p>Socratic Method Implementation</p>
+                    <p>Real-time AI Responses</p>
+                    <p>Secure Authentication</p>
+                    <p>Performance Optimized</p>
+                  </div>
+                </div>
+              </PixelCard>
+              
+            </div>
+          </div>
+        </section>
+        
+        {/* Core Features Showcase */}
+        <section className="w-full py-16 px-6">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Experience Next-Generation Learning
+              </h2>
+              <p className="text-gray-300 text-lg max-w-3xl mx-auto">
+                Discover the powerful features that make our Socratic AI platform revolutionary in educational technology
+              </p>
+            </div>
+            
+            <div className="relative -right-20">
+              <CardSwap
+                width={320}
+                height={220}
+                cardDistance={45}
+                verticalDistance={25}
+                delay={3500}
+                pauseOnHover={true}
+                skewAmount={6}
+                easing="elastic"
+              >
+                <Card className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white text-center shadow-2xl border border-blue-400/20">
+                  <div className="text-3xl mb-3">🧠</div>
+                  <h4 className="font-bold text-lg mb-2">Smart AI Reasoning</h4>
+                  <p className="text-sm text-blue-100 mb-3">Advanced Mistral-based neural networks</p>
+                  <div className="text-xs text-blue-200 space-y-1">
+                    <p>• Natural Language Understanding</p>
+                    <p>• Context-Aware Responses</p>
+                    <p>• Multi-step Problem Solving</p>
+                  </div>
+                </Card>
+                
+                <Card className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white text-center shadow-2xl border border-purple-400/20">
+                  <div className="text-3xl mb-3">⚡</div>
+                  <h4 className="font-bold text-lg mb-2">Lightning Fast</h4>
+                  <p className="text-sm text-purple-100 mb-3">Redis-powered instant responses</p>
+                  <div className="text-xs text-purple-200 space-y-1">
+                    <p>• Sub-second Response Time</p>
+                    <p>• Intelligent Caching</p>
+                    <p>• Optimized Data Pipelines</p>
+                  </div>
+                </Card>
+                
+                <Card className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white text-center shadow-2xl border border-green-400/20">
+                  <div className="text-3xl mb-3">🎯</div>
+                  <h4 className="font-bold text-lg mb-2">Personalized Learning</h4>
+                  <p className="text-sm text-green-100 mb-3">Adaptive algorithms for every student</p>
+                  <div className="text-xs text-green-200 space-y-1">
+                    <p>• Learning Style Analysis</p>
+                    <p>• Progress Tracking</p>
+                    <p>• Custom Learning Paths</p>
+                  </div>
+                </Card>
+                
+                <Card className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 text-white text-center shadow-2xl border border-orange-400/20">
+                  <div className="text-3xl mb-3">🔒</div>
+                  <h4 className="font-bold text-lg mb-2">Enterprise Security</h4>
+                  <p className="text-sm text-orange-100 mb-3">Firebase-powered data protection</p>
+                  <div className="text-xs text-orange-200 space-y-1">
+                    <p>• End-to-End Encryption</p>
+                    <p>• GDPR Compliant</p>
+                    <p>• Secure Authentication</p>
+                  </div>
+                </Card>
+                
+                <Card className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl p-6 text-white text-center shadow-2xl border border-pink-400/20">
+                  <div className="text-3xl mb-3">💬</div>
+                  <h4 className="font-bold text-lg mb-2">Interactive Dialogue</h4>
+                  <p className="text-sm text-pink-100 mb-3">Real-time conversational learning</p>
+                  <div className="text-xs text-pink-200 space-y-1">
+                    <p>• Socratic Questioning</p>
+                    <p>• Dynamic Follow-ups</p>
+                    <p>• Contextual Guidance</p>
+                  </div>
+                </Card>
+                
+                <Card className="bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl p-6 text-white text-center shadow-2xl border border-teal-400/20">
+                  <div className="text-3xl mb-3">📊</div>
+                  <h4 className="font-bold text-lg mb-2">Analytics Dashboard</h4>
+                  <p className="text-sm text-teal-100 mb-3">Comprehensive learning insights</p>
+                  <div className="text-xs text-teal-200 space-y-1">
+                    <p>• Performance Metrics</p>
+                    <p>• Learning Analytics</p>
+                    <p>• Progress Visualization</p>
+                  </div>
+                </Card>
+                
+                <Card className="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl p-6 text-white text-center shadow-2xl border border-indigo-400/20">
+                  <div className="text-3xl mb-3">🌐</div>
+                  <h4 className="font-bold text-lg mb-2">Multi-Platform</h4>
+                  <p className="text-sm text-indigo-100 mb-3">Seamless cross-device experience</p>
+                  <div className="text-xs text-indigo-200 space-y-1">
+                    <p>• Responsive Design</p>
+                    <p>• Mobile Optimized</p>
+                    <p>• Cloud Synchronization</p>
+                  </div>
+                </Card>
+                
+                <Card className="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-6 text-white text-center shadow-2xl border border-red-400/20">
+                  <div className="text-3xl mb-3">🎓</div>
+                  <h4 className="font-bold text-lg mb-2">Educational Focus</h4>
+                  <p className="text-sm text-red-100 mb-3">Pedagogy-driven design principles</p>
+                  <div className="text-xs text-red-200 space-y-1">
+                    <p>• Research-Based Methods</p>
+                    <p>• Curriculum Alignment</p>
+                    <p>• Assessment Integration</p>
+                  </div>
+                </Card>
+              </CardSwap>
+            </div>
+            
+            <div className="text-center mt-12">
+              <p className="text-gray-400 text-sm max-w-2xl mx-auto">
+                Each feature is meticulously crafted to enhance the learning experience, 
+                combining cutting-edge AI technology with proven educational methodologies.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Technical Features Section */}
+        <section className="w-full py-12 px-6">
+          <div className="max-w-6xl mx-auto mb-8">
+            <h2 className="text-3xl font-bold text-center mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              Powered by Advanced Technology
+            </h2>
+            <p className="text-gray-300 text-center max-w-3xl mx-auto">
+              Experience the cutting-edge AI infrastructure that makes Socratic learning possible
+            </p>
+          </div>
+          <FlowingMenu items={technicalFeatures} />
+        </section>
+
+        {/* Footer */}
+        <Footer />
+      </div>
+    </div>
+  );
+}
