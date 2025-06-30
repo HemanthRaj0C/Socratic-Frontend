@@ -6,6 +6,15 @@ import Aurora from '@/components/Aurora/Aurora';
 import DotGrid from '@/components/DotGrid/DotGrid';
 
 interface Message { role: 'user' | 'assistant'; content: string; }
+interface ServiceHealth { 
+    status: 'online' | 'slow' | 'offline'; 
+    service: string; 
+    chat_enabled: boolean;
+    details?: {
+        colab: string;
+        huggingface: string;
+    };
+}
 
 export default function NewChatPage() {
     const { user } = useAuth();
@@ -13,15 +22,33 @@ export default function NewChatPage() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [serviceHealth, setServiceHealth] = useState<ServiceHealth | null>(null);
     const chatEndRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages, isLoading]);
 
+    // Check service health on component mount
+    useEffect(() => {
+        const checkHealth = async () => {
+            try {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/health`);
+                if (response.ok) {
+                    const health = await response.json();
+                    setServiceHealth(health);
+                }
+            } catch (error) {
+                console.error('Health check failed:', error);
+                setServiceHealth({ status: 'offline', service: 'none', chat_enabled: false });
+            }
+        };
+        checkHealth();
+    }, []);
+
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        if (!input.trim() || isLoading || !user) return;
+        if (!input.trim() || isLoading || !user || !serviceHealth?.chat_enabled) return;
 
         const userMessage: Message = { role: 'user', content: input };
         setMessages(prev => [...prev, userMessage]);
@@ -35,16 +62,51 @@ export default function NewChatPage() {
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}`},
                 body: JSON.stringify({ messages: [userMessage], conversation_id: null }),
             });
-            if (!response.ok) throw new Error((await response.json()).detail || 'Failed to fetch');
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.detail || 'Failed to fetch');
+            }
+            
             const data = await response.json();
             
-            // This was a new chat, so the backend created an ID. Redirect to that new chat page.
-            router.push(`/chat/${data.conversation_id}`);
+            // Add the assistant's reply temporarily before redirecting
+            const sourceEmoji = data.source === 'colab_gpu' ? '⚡' : data.source === 'hf_cpu_slow' ? '🐢' : '🤖';
+            setMessages(prev => [...prev, { 
+                role: 'assistant', 
+                content: `${sourceEmoji} ${data.reply}` 
+            }]);
+            
+            // Redirect to the new conversation page
+            setTimeout(() => {
+                router.push(`/chat/${data.conversation_id}`);
+            }, 1000);
         } catch (error) {
             const message = error instanceof Error ? error.message : "Unknown error";
-            setMessages(prev => [...prev, { role: 'assistant', content: `Error: ${message}` }]);
+            setMessages(prev => [...prev, { role: 'assistant', content: `❌ Error: ${message}` }]);
+        } finally {
             setIsLoading(false);
         }
+    };
+
+    // Service status indicator component
+    const ServiceStatusIndicator = () => {
+        if (!serviceHealth) return null;
+        
+        const statusConfig = {
+            online: { color: 'text-green-400', bg: 'bg-green-500/20', text: 'Fast AI (GPU)', icon: '⚡' },
+            slow: { color: 'text-yellow-400', bg: 'bg-yellow-500/20', text: 'Slow AI (CPU)', icon: '🐢' },
+            offline: { color: 'text-red-400', bg: 'bg-red-500/20', text: 'AI Offline', icon: '❌' }
+        };
+        
+        const config = statusConfig[serviceHealth.status];
+        
+        return (
+            <div className={`flex items-center space-x-2 px-3 py-1 rounded-full ${config.bg} border border-white/10`}>
+                <span className="text-sm">{config.icon}</span>
+                <span className={`text-xs font-medium ${config.color}`}>{config.text}</span>
+            </div>
+        );
     };
 
     return (
@@ -78,6 +140,7 @@ export default function NewChatPage() {
                             </div>
                         </div>
                         <div className="flex items-center space-x-3">
+                            <ServiceStatusIndicator />
                             <div className="text-sm text-gray-300">{user?.displayName || user?.email}</div>
                             <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-sm font-semibold">
                                 {user?.displayName?.[0] || user?.email?.[0] || 'U'}
@@ -99,6 +162,43 @@ export default function NewChatPage() {
                             display: none;
                         }
                     `}</style>
+                    
+                    {/* Service Offline Banner */}
+                    {serviceHealth?.status === 'offline' && (
+                        <div className="mx-4 mb-4 p-4 bg-red-900/50 border border-red-500/30 rounded-lg backdrop-blur-sm">
+                            <div className="flex items-center space-x-3">
+                                <span className="text-2xl">🚫</span>
+                                <div>
+                                    <h3 className="font-semibold text-red-200">AI Services Temporarily Unavailable</h3>
+                                    <p className="text-sm text-red-300">
+                                        All AI model services are currently offline. Please check back in a few minutes.
+                                        <br />We're working to restore service as quickly as possible.
+                                    </p>
+                                    {serviceHealth.details && (
+                                        <p className="text-xs text-red-400 mt-2">
+                                            Status: Colab ({serviceHealth.details.colab}), HuggingFace ({serviceHealth.details.huggingface})
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    
+                    {/* Slow Service Warning */}
+                    {serviceHealth?.status === 'slow' && (
+                        <div className="mx-4 mb-4 p-4 bg-yellow-900/50 border border-yellow-500/30 rounded-lg backdrop-blur-sm">
+                            <div className="flex items-center space-x-3">
+                                <span className="text-2xl">🐢</span>
+                                <div>
+                                    <h3 className="font-semibold text-yellow-200">Running on Backup CPU</h3>
+                                    <p className="text-sm text-yellow-300">
+                                        AI responses may be slower than usual. We're using CPU-based processing.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     <div className="max-w-4xl mx-auto p-2 space-y-6">
                         {messages.length === 0 && !isLoading ? (
                             <div className="text-center">
@@ -185,12 +285,26 @@ export default function NewChatPage() {
                                     type="text" 
                                     value={input} 
                                     onChange={(e) => setInput(e.target.value)} 
-                                    placeholder="Start your learning journey... What would you like to explore?" 
-                                    className="w-full p-4 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 text-white placeholder-gray-400 transition-all duration-200" 
-                                    disabled={isLoading}
+                                    placeholder={
+                                        !serviceHealth?.chat_enabled 
+                                            ? "AI services are currently offline. Please try again later..." 
+                                            : serviceHealth?.status === 'slow'
+                                            ? "AI is running on slow CPU - responses may take longer..."
+                                            : "Start your learning journey... What would you like to explore?"
+                                    }
+                                    className={`w-full p-4 bg-white/10 backdrop-blur-sm rounded-2xl border transition-all duration-200 text-white placeholder-gray-400 ${
+                                        !serviceHealth?.chat_enabled 
+                                            ? 'border-red-500/30 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50' 
+                                            : 'border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50'
+                                    }`}
+                                    disabled={isLoading || !serviceHealth?.chat_enabled}
                                 />
                                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">
-                                    {input.length > 0 && (
+                                    {!serviceHealth?.chat_enabled ? (
+                                        <span className="bg-red-500/20 px-2 py-1 rounded text-xs text-red-300">
+                                            Service Offline ❌
+                                        </span>
+                                    ) : input.length > 0 && (
                                         <span className="bg-blue-500/20 px-2 py-1 rounded text-xs">
                                             Press Enter ↵
                                         </span>
@@ -199,15 +313,25 @@ export default function NewChatPage() {
                             </div>
                             <button 
                                 type="submit" 
-                                className="group relative px-6 py-4 bg-gradient-to-r from-slate-700 to-gray-700 hover:from-slate-600 hover:to-gray-600 rounded-2xl font-semibold transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border border-slate-600 overflow-hidden"
-                                disabled={isLoading || !input.trim()}
+                                className={`group relative px-6 py-4 rounded-2xl font-semibold transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none border overflow-hidden ${
+                                    !serviceHealth?.chat_enabled
+                                        ? 'bg-gradient-to-r from-red-700 to-red-800 border-red-600 cursor-not-allowed'
+                                        : 'bg-gradient-to-r from-slate-700 to-gray-700 hover:from-slate-600 hover:to-gray-600 border-slate-600'
+                                }`}
+                                disabled={isLoading || !input.trim() || !serviceHealth?.chat_enabled}
                             >
                                 <div className="relative z-10 flex items-center space-x-2">
-                                    <span>{isLoading ? '⏳' : '🚀'}</span>
-                                    <span>{isLoading ? 'Starting' : 'Begin'}</span>
+                                    <span>
+                                        {!serviceHealth?.chat_enabled ? '❌' : isLoading ? '⏳' : '🚀'}
+                                    </span>
+                                    <span>
+                                        {!serviceHealth?.chat_enabled ? 'Offline' : isLoading ? 'Starting' : 'Begin'}
+                                    </span>
                                 </div>
                                 {/* Shine Effect */}
-                                <div className="absolute inset-0 -skew-x-12 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+                                {serviceHealth?.chat_enabled && (
+                                    <div className="absolute inset-0 -skew-x-12 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+                                )}
                             </button>
                         </form>
                     </div>

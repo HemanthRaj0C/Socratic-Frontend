@@ -86,7 +86,7 @@ export default function LandingPage({ onLogin }: LandingPageProps) {
           </div>
           
           {/* Alternative Login Options Placeholder */}
-          <div className="mt-8 pt-6 border-t border-gray-700">
+          <div className="my-8 pt-6 border-t border-gray-700">
             <p className="text-sm text-gray-500 mb-4">More options coming soon</p>
             <div className="flex justify-center space-x-4">
               <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center opacity-50">

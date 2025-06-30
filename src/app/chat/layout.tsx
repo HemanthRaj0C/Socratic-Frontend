@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import DotGrid from '@/components/DotGrid/DotGrid';
 
-interface Conversation { id: string; title: string; }
+interface Conversation { id: string; title: string; createdAt?: any; }
 
 export default function ChatLayout({ children }: { children: ReactNode }) {
     const { user, logout, loading } = useAuth();
@@ -16,11 +16,22 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
     useEffect(() => {
         if (user) {
             const fetchConversations = async () => {
-                const idToken = await user.getIdToken();
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/conversations`, {
-                    headers: { 'Authorization': `Bearer ${idToken}` },
-                });
-                if (response.ok) setConversations(await response.json());
+                try {
+                    const idToken = await user.getIdToken();
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/conversations`, {
+                        headers: { 'Authorization': `Bearer ${idToken}` },
+                    });
+                    if (response.ok) {
+                        const conversations = await response.json();
+                        setConversations(conversations);
+                    } else {
+                        console.error('Failed to fetch conversations:', response.status);
+                        setConversations([]);
+                    }
+                } catch (error) {
+                    console.error('Error fetching conversations:', error);
+                    setConversations([]);
+                }
             };
             fetchConversations();
         }
@@ -108,7 +119,9 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
                                         }`}
                                     >
                                         <div className="truncate font-medium">{convo.title}</div>
-                                        <div className="text-xs text-gray-400 mt-1">Recent conversation</div>
+                                        <div className="text-xs text-gray-400 mt-1">
+                                            {convo.createdAt ? new Date(convo.createdAt).toLocaleDateString() : 'Recent conversation'}
+                                        </div>
                                     </Link>
                                 );
                             })

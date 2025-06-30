@@ -1,6 +1,7 @@
 // src/components/layout/PageLayout.tsx
 'use client';
 
+import { useState, useEffect } from 'react';
 import Aurora from '@/components/Aurora/Aurora';
 import Threads from '@/components/Threads/Threads';
 import Footer from '@/components/layout/Footer';
@@ -12,7 +13,53 @@ interface PageLayoutProps {
   children: React.ReactNode;
 }
 
+interface ServiceHealth { 
+  status: 'online' | 'slow' | 'offline'; 
+  service: string; 
+  chat_enabled: boolean;
+  details?: {
+    colab: string;
+    huggingface: string;
+  };
+}
+
 export default function PageLayout({ children }: PageLayoutProps) {
+  const [serviceHealth, setServiceHealth] = useState<ServiceHealth | null>(null);
+
+  // Check service health
+  useEffect(() => {
+    const checkHealth = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/health`);
+        if (response.ok) {
+          const health = await response.json();
+          setServiceHealth(health);
+        }
+      } catch (error) {
+        console.error('Health check failed:', error);
+        setServiceHealth({ status: 'offline', service: 'none', chat_enabled: false });
+      }
+    };
+    checkHealth();
+    
+    // Check every 30 seconds
+    const interval = setInterval(checkHealth, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const refreshServiceStatus = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/health`);
+      if (response.ok) {
+        const health = await response.json();
+        setServiceHealth(health);
+      }
+    } catch (error) {
+      console.error('Health check failed:', error);
+      setServiceHealth({ status: 'offline', service: 'none', chat_enabled: false });
+    }
+  };
+
   // Technical features data for the flowing menu
   const technicalFeatures = [
     {
@@ -61,6 +108,119 @@ export default function PageLayout({ children }: PageLayoutProps) {
       {/* Content Overlay */}
       <div className="relative z-10">
         {children}
+
+        {/* Service Status Section */}
+        {serviceHealth && (
+          <section className="w-full py-8 px-6 border-t border-white/10 bg-black/20 backdrop-blur-sm">
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-6">
+                <h3 className="text-xl font-semibold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                  AI Service Status
+                </h3>
+                <p className="text-gray-400 text-sm mb-3">
+                  Real-time status of our AI infrastructure
+                </p>
+                <button
+                  onClick={refreshServiceStatus}
+                  className="text-xs text-blue-400 hover:text-blue-300 transition-colors px-3 py-1 border border-blue-500/30 rounded-full hover:bg-blue-500/10"
+                >
+                  🔄 Refresh Status
+                </button>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Overall Status */}
+                <div className={`p-4 rounded-lg border backdrop-blur-sm ${
+                  serviceHealth.status === 'online' 
+                    ? 'bg-green-900/30 border-green-500/30' 
+                    : serviceHealth.status === 'slow'
+                    ? 'bg-yellow-900/30 border-yellow-500/30'
+                    : 'bg-red-900/30 border-red-500/30'
+                }`}>
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl">
+                      {serviceHealth.status === 'online' ? '🟢' : serviceHealth.status === 'slow' ? '🟡' : '🔴'}
+                    </span>
+                    <div>
+                      <h4 className="font-semibold">Overall Status</h4>
+                      <p className={`text-sm ${
+                        serviceHealth.status === 'online' ? 'text-green-300' : 
+                        serviceHealth.status === 'slow' ? 'text-yellow-300' : 'text-red-300'
+                      }`}>
+                        {serviceHealth.status === 'online' ? 'All Systems Operational' : 
+                         serviceHealth.status === 'slow' ? 'Degraded Performance' : 'Services Offline'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Colab Status */}
+                <div className={`p-4 rounded-lg border backdrop-blur-sm ${
+                  serviceHealth.service === 'colab_gpu'
+                    ? 'bg-green-900/30 border-green-500/30'
+                    : serviceHealth.details?.colab === 'not_configured'
+                    ? 'bg-gray-900/30 border-gray-500/30'
+                    : 'bg-red-900/30 border-red-500/30'
+                }`}>
+                  <div className="flex items-center space-x-3">
+                    <span className="text-xl">⚡</span>
+                    <div>
+                      <h4 className="font-semibold text-sm">Google Colab (GPU)</h4>
+                      <p className={`text-xs ${
+                        serviceHealth.service === 'colab_gpu'
+                          ? 'text-green-300'
+                          : serviceHealth.details?.colab === 'not_configured'
+                          ? 'text-gray-300'
+                          : 'text-red-300'
+                      }`}>
+                        {serviceHealth.service === 'colab_gpu' ? 'Online (Active)' :
+                         serviceHealth.details?.colab === 'not_configured' ? 'Not Configured' :
+                         serviceHealth.details?.colab === 'offline' ? 'Offline' :
+                         serviceHealth.service === 'hf_cpu_slow' ? 'Standby' : 'Offline'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* HuggingFace Status */}
+                <div className={`p-4 rounded-lg border backdrop-blur-sm ${
+                  serviceHealth.service === 'hf_cpu_slow'
+                    ? 'bg-yellow-900/30 border-yellow-500/30'
+                    : serviceHealth.details?.huggingface === 'not_configured'
+                    ? 'bg-gray-900/30 border-gray-500/30'
+                    : 'bg-red-900/30 border-red-500/30'
+                }`}>
+                  <div className="flex items-center space-x-3">
+                    <span className="text-xl">🐢</span>
+                    <div>
+                      <h4 className="font-semibold text-sm">HuggingFace (CPU)</h4>
+                      <p className={`text-xs ${
+                        serviceHealth.service === 'hf_cpu_slow'
+                          ? 'text-yellow-300'
+                          : serviceHealth.details?.huggingface === 'not_configured'
+                          ? 'text-gray-300'
+                          : 'text-red-300'
+                      }`}>
+                        {serviceHealth.service === 'hf_cpu_slow' ? 'Online (Active)' :
+                         serviceHealth.details?.huggingface === 'not_configured' ? 'Not Configured' :
+                         serviceHealth.details?.huggingface === 'offline' ? 'Offline' :
+                         serviceHealth.service === 'colab_gpu' ? 'Standby' : 'Offline'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-center mt-4">
+                <p className={`text-xs ${
+                  serviceHealth.chat_enabled ? 'text-green-400' : 'text-red-400'
+                }`}>
+                  Chat Service: {serviceHealth.chat_enabled ? 'Available' : 'Unavailable'}
+                </p>
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* Developer Information Section */}
         <section className="w-full py-12 px-6 flex gap-10">
@@ -254,7 +414,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
         </section>
 
         {/* Footer */}
-        <Footer />
+        <Footer serviceHealth={serviceHealth} />
       </div>
     </div>
   );
