@@ -4,6 +4,11 @@ import { useAuth } from '@/context/AuthContext';
 import { useParams, useRouter } from 'next/navigation';
 import Aurora from '@/components/Aurora/Aurora';
 import DotGrid from '@/components/DotGrid/DotGrid';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeHighlight from 'rehype-highlight';
+import 'highlight.js/styles/github-dark.css';
+import './markdown-styles.css';
 
 interface Message { role: 'user' | 'assistant'; content: string; }
 interface ServiceHealth { 
@@ -135,6 +140,8 @@ export default function ConversationPage() {
             </div>
         );
     };
+
+
 
     return (
         <div className="w-full h-full relative text-white">
@@ -268,7 +275,14 @@ export default function ConversationPage() {
                                             ? 'bg-gradient-to-r from-blue-600/80 to-purple-600/80 border-blue-500/30 text-white' 
                                             : 'bg-white/10 border-white/20 text-gray-100'
                                     }`}>
-                                        <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
+                                        <div className="prose prose-invert max-w-none">
+                                            <ReactMarkdown
+                                                remarkPlugins={[remarkGfm]}
+                                                rehypePlugins={[rehypeHighlight]}
+                                            >
+                                                {msg.content}
+                                            </ReactMarkdown>
+                                        </div>
                                     </div>
                                     {msg.role === 'user' && (
                                         <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold">
