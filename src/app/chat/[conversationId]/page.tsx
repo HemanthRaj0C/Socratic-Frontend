@@ -319,13 +319,6 @@ export default function ConversationPage() {
                                             ? 'bg-red-900/50 border-red-500/30 text-red-100'
                                             : 'bg-white/10 border-white/20 text-gray-100'
                                     }`}>
-                                        {msg.role === 'assistant' && (
-                                            <div className="mb-2 flex items-center space-x-1">
-                                                {msg.source === 'colab_gpu' && <Zap className="w-4 h-4 text-yellow-400" />}
-                                                {msg.source === 'hf_cpu_slow' && <Turtle className="w-4 h-4 text-green-400" />}
-                                                {(!msg.source || (msg.source !== 'colab_gpu' && msg.source !== 'hf_cpu_slow')) && <Bot className="w-4 h-4 text-blue-400" />}
-                                            </div>
-                                        )}
                                         {msg.isError && (
                                             <div className="mb-2 flex items-center space-x-1">
                                                 <X className="w-4 h-4 text-red-400" />
