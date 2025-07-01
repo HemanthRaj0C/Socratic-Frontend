@@ -4,6 +4,20 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import Aurora from '@/components/Aurora/Aurora';
 import DotGrid from '@/components/DotGrid/DotGrid';
+import { 
+  Zap, 
+  Turtle, 
+  Bot, 
+  X, 
+  GraduationCap, 
+  XCircle,
+  HelpCircle,
+  Brain,
+  Rocket,
+  Send,
+  Microscope,
+  Laptop
+} from 'lucide-react';
 
 interface Message { role: 'user' | 'assistant'; content: string; }
 interface ServiceHealth { 
@@ -71,10 +85,9 @@ export default function NewChatPage() {
             const data = await response.json();
             
             // Add the assistant's reply temporarily before redirecting
-            const sourceEmoji = data.source === 'colab_gpu' ? '⚡' : data.source === 'hf_cpu_slow' ? '🐢' : '🤖';
             setMessages(prev => [...prev, { 
                 role: 'assistant', 
-                content: `${sourceEmoji} ${data.reply}` 
+                content: data.reply 
             }]);
             
             // Redirect to the new conversation page
@@ -83,7 +96,7 @@ export default function NewChatPage() {
             }, 1000);
         } catch (error) {
             const message = error instanceof Error ? error.message : "Unknown error";
-            setMessages(prev => [...prev, { role: 'assistant', content: `❌ Error: ${message}` }]);
+            setMessages(prev => [...prev, { role: 'assistant', content: `Error: ${message}` }]);
         } finally {
             setIsLoading(false);
         }
@@ -94,16 +107,31 @@ export default function NewChatPage() {
         if (!serviceHealth) return null;
         
         const statusConfig = {
-            online: { color: 'text-green-400', bg: 'bg-green-500/20', text: 'Fast AI (GPU)', icon: '⚡' },
-            slow: { color: 'text-yellow-400', bg: 'bg-yellow-500/20', text: 'Slow AI (CPU)', icon: '🐢' },
-            offline: { color: 'text-red-400', bg: 'bg-red-500/20', text: 'AI Offline', icon: '❌' }
+            online: { 
+                color: 'text-green-400', 
+                bg: 'bg-green-500/20', 
+                text: 'Fast AI (GPU)', 
+                icon: <Zap className="w-4 h-4" />
+            },
+            slow: { 
+                color: 'text-yellow-400', 
+                bg: 'bg-yellow-500/20', 
+                text: 'Slow AI (CPU)', 
+                icon: <Turtle className="w-4 h-4" />
+            },
+            offline: { 
+                color: 'text-red-400', 
+                bg: 'bg-red-500/20', 
+                text: 'AI Offline', 
+                icon: <X className="w-4 h-4" />
+            }
         };
         
         const config = statusConfig[serviceHealth.status];
         
         return (
             <div className={`flex items-center space-x-2 px-3 py-1 rounded-full ${config.bg} border border-white/10`}>
-                <span className="text-sm">{config.icon}</span>
+                {config.icon}
                 <span className={`text-xs font-medium ${config.color}`}>{config.text}</span>
             </div>
         );
@@ -133,8 +161,9 @@ export default function NewChatPage() {
                             >
                             </button>
                             <div>
-                                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                                    🎓 New Socratic Session
+                                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent flex items-center space-x-2">
+                                    <GraduationCap className="w-5 h-5 text-blue-400" />
+                                    <span>New Socratic Session</span>
                                 </h1>
                                 <p className="text-sm text-gray-400">Start your learning journey</p>
                             </div>
@@ -167,7 +196,7 @@ export default function NewChatPage() {
                     {serviceHealth?.status === 'offline' && (
                         <div className="mx-4 mb-4 p-4 bg-red-900/50 border border-red-500/30 rounded-lg backdrop-blur-sm">
                             <div className="flex items-center space-x-3">
-                                <span className="text-2xl">🚫</span>
+                                <XCircle className="w-6 h-6 text-red-400" />
                                 <div>
                                     <h3 className="font-semibold text-red-200">AI Services Temporarily Unavailable</h3>
                                     <p className="text-sm text-red-300">
@@ -188,7 +217,7 @@ export default function NewChatPage() {
                     {serviceHealth?.status === 'slow' && (
                         <div className="mx-4 mb-4 p-4 bg-yellow-900/50 border border-yellow-500/30 rounded-lg backdrop-blur-sm">
                             <div className="flex items-center space-x-3">
-                                <span className="text-2xl">🐢</span>
+                                <Turtle className="w-6 h-6 text-yellow-400" />
                                 <div>
                                     <h3 className="font-semibold text-yellow-200">Running on Backup CPU</h3>
                                     <p className="text-sm text-yellow-300">
@@ -202,7 +231,9 @@ export default function NewChatPage() {
                     <div className="max-w-4xl mx-auto p-2 space-y-6">
                         {messages.length === 0 && !isLoading ? (
                             <div className="text-center">
-                                <div className="text-7xl mb-6">🤔</div>
+                                <div className="flex justify-center mb-6">
+                                    <HelpCircle className="w-20 h-20 text-blue-400" />
+                                </div>
                                 <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                                     What would you like to explore today?
                                 </h2>
@@ -215,21 +246,27 @@ export default function NewChatPage() {
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12">
                                     <div className="group p-6 bg-white/5 hover:bg-white/10 backdrop-blur-sm rounded-xl border border-white/10 hover:border-blue-500/30 transition-all duration-300 cursor-pointer"
                                          onClick={() => setInput("What is the nature of knowledge?")}>
-                                        <div className="text-3xl mb-3">🧠</div>
+                                        <div className="flex justify-center mb-3">
+                                            <Brain className="w-8 h-8 text-blue-400" />
+                                        </div>
                                         <h3 className="font-semibold mb-2 text-blue-400">Philosophy</h3>
                                         <p className="text-sm text-gray-400">Explore deep questions about existence, knowledge, and meaning</p>
                                     </div>
                                     
                                     <div className="group p-6 bg-white/5 hover:bg-white/10 backdrop-blur-sm rounded-xl border border-white/10 hover:border-purple-500/30 transition-all duration-300 cursor-pointer"
                                          onClick={() => setInput("How does quantum mechanics work?")}>
-                                        <div className="text-3xl mb-3">🔬</div>
+                                        <div className="flex justify-center mb-3">
+                                            <Microscope className="w-8 h-8 text-purple-400" />
+                                        </div>
                                         <h3 className="font-semibold mb-2 text-purple-400">Science</h3>
                                         <p className="text-sm text-gray-400">Understand natural phenomena through inquiry and discovery</p>
                                     </div>
                                     
                                     <div className="group p-6 bg-white/5 hover:bg-white/10 backdrop-blur-sm rounded-xl border border-white/10 hover:border-pink-500/30 transition-all duration-300 cursor-pointer"
                                          onClick={() => setInput("What is the impact of AI on society?")}>
-                                        <div className="text-3xl mb-3">💻</div>
+                                        <div className="flex justify-center mb-3">
+                                            <Laptop className="w-8 h-8 text-pink-400" />
+                                        </div>
                                         <h3 className="font-semibold mb-2 text-pink-400">Technology</h3>
                                         <p className="text-sm text-gray-400">Learn about innovation, algorithms, and digital transformation</p>
                                     </div>
@@ -239,8 +276,8 @@ export default function NewChatPage() {
                             messages.map((msg, index) => (
                                 <div key={index} className={`flex gap-4 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                     {msg.role === 'assistant' && (
-                                        <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold">
-                                            🤖
+                                        <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                            <Bot className="w-5 h-5 text-white" />
                                         </div>
                                     )}
                                     <div className={`p-4 rounded-2xl max-w-2xl backdrop-blur-sm border ${
@@ -260,8 +297,8 @@ export default function NewChatPage() {
                         )}
                         {isLoading && (
                             <div className="flex gap-4 justify-start">
-                                <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold">
-                                    🤖
+                                <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <Bot className="w-5 h-5 text-white" />
                                 </div>
                                 <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 animate-pulse">
                                     <div className="flex space-x-2">
@@ -301,8 +338,9 @@ export default function NewChatPage() {
                                 />
                                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">
                                     {!serviceHealth?.chat_enabled ? (
-                                        <span className="bg-red-500/20 px-2 py-1 rounded text-xs text-red-300">
-                                            Service Offline ❌
+                                        <span className="bg-red-500/20 px-2 py-1 rounded text-xs text-red-300 flex items-center space-x-1">
+                                            <X className="w-3 h-3" />
+                                            <span>Service Offline</span>
                                         </span>
                                     ) : input.length > 0 && (
                                         <span className="bg-blue-500/20 px-2 py-1 rounded text-xs">
@@ -321,9 +359,13 @@ export default function NewChatPage() {
                                 disabled={isLoading || !input.trim() || !serviceHealth?.chat_enabled}
                             >
                                 <div className="relative z-10 flex items-center space-x-2">
-                                    <span>
-                                        {!serviceHealth?.chat_enabled ? '❌' : isLoading ? '⏳' : '🚀'}
-                                    </span>
+                                    {!serviceHealth?.chat_enabled ? (
+                                        <X className="w-5 h-5" />
+                                    ) : isLoading ? (
+                                        <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
+                                    ) : (
+                                        <Rocket className="w-5 h-5" />
+                                    )}
                                     <span>
                                         {!serviceHealth?.chat_enabled ? 'Offline' : isLoading ? 'Starting' : 'Begin'}
                                     </span>

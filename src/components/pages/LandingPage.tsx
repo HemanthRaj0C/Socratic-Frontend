@@ -2,6 +2,7 @@
 'use client';
 
 import SpotlightCard from '@/components/SpotlightCard/SpotlightCard';
+import { HelpCircle, Target, Lightbulb, Mail, Link, Smartphone } from 'lucide-react';
 
 interface LandingPageProps {
   onLogin: () => void;
@@ -35,7 +36,9 @@ export default function LandingPage({ onLogin }: LandingPageProps) {
             className="p-6 rounded-lg"
             spotlightColor="rgba(59, 130, 246, 0.3)"
           >
-            <div className="text-3xl mb-4">🤔</div>
+            <div className="flex justify-center mb-4">
+              <HelpCircle className="w-8 h-8 text-blue-400" />
+            </div>
             <h3 className="text-lg font-semibold mb-2">Socratic Method</h3>
             <p className="text-gray-400 text-sm">Learn through guided questioning and critical thinking</p>
           </SpotlightCard>
@@ -44,7 +47,9 @@ export default function LandingPage({ onLogin }: LandingPageProps) {
             className="p-6 rounded-lg"
             spotlightColor="rgba(139, 92, 246, 0.3)"
           >
-            <div className="text-3xl mb-4">🎯</div>
+            <div className="flex justify-center mb-4">
+              <Target className="w-8 h-8 text-purple-400" />
+            </div>
             <h3 className="text-lg font-semibold mb-2">Personalized</h3>
             <p className="text-gray-400 text-sm">Tailored learning experience based on your needs</p>
           </SpotlightCard>
@@ -53,7 +58,9 @@ export default function LandingPage({ onLogin }: LandingPageProps) {
             className="p-6 rounded-lg"
             spotlightColor="rgba(8, 145, 178, 0.3)"
           >
-            <div className="text-3xl mb-4">💡</div>
+            <div className="flex justify-center mb-4">
+              <Lightbulb className="w-8 h-8 text-cyan-400" />
+            </div>
             <h3 className="text-lg font-semibold mb-2">Interactive</h3>
             <p className="text-gray-400 text-sm">Engage in meaningful conversations with AI</p>
           </SpotlightCard>
@@ -90,13 +97,13 @@ export default function LandingPage({ onLogin }: LandingPageProps) {
             <p className="text-sm text-gray-500 mb-4">More options coming soon</p>
             <div className="flex justify-center space-x-4">
               <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center opacity-50">
-                <span className="text-lg">📧</span>
+                <Mail className="w-5 h-5 text-gray-400" />
               </div>
               <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center opacity-50">
-                <span className="text-lg">🔗</span>
+                <Link className="w-5 h-5 text-gray-400" />
               </div>
               <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center opacity-50">
-                <span className="text-lg">📱</span>
+                <Smartphone className="w-5 h-5 text-gray-400" />
               </div>
             </div>
           </div>
