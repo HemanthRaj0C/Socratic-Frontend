@@ -9,8 +9,25 @@ import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
 import 'highlight.js/styles/github-dark.css';
 import './markdown-styles.css';
+import { 
+  Zap, 
+  Turtle, 
+  Bot, 
+  X, 
+  GraduationCap, 
+  XCircle, 
+  Lightbulb, 
+  Brain,
+  ArrowLeft,
+  Send
+} from 'lucide-react';
 
-interface Message { role: 'user' | 'assistant'; content: string; }
+interface Message { 
+  role: 'user' | 'assistant'; 
+  content: string; 
+  source?: string;
+  isError?: boolean;
+}
 interface ServiceHealth { 
     status: 'online' | 'slow' | 'offline'; 
     service: string; 
@@ -107,15 +124,25 @@ export default function ConversationPage() {
             const data = await response.json();
             
             // Add the assistant's reply to the messages with source indicator
-            const sourceEmoji = data.source === 'colab_gpu' ? '⚡' : data.source === 'hf_cpu_slow' ? '🐢' : '🤖';
+            const getSourceIcon = (source: string) => {
+                if (source === 'colab_gpu') return <Zap className="w-4 h-4 inline mr-1 text-yellow-400" />;
+                if (source === 'hf_cpu_slow') return <Turtle className="w-4 h-4 inline mr-1 text-green-400" />;
+                return <Bot className="w-4 h-4 inline mr-1 text-blue-400" />;
+            };
+            
             setMessages(prev => [...prev, { 
                 role: 'assistant', 
-                content: `${sourceEmoji} ${data.reply}` 
+                content: data.reply,
+                source: data.source // Store source separately for rendering
             }]);
         } catch (error) {
             console.error('Chat error:', error);
             const message = error instanceof Error ? error.message : "Unknown error";
-            setMessages(prev => [...prev, { role: 'assistant', content: `❌ Error: ${message}` }]);
+            setMessages(prev => [...prev, { 
+                role: 'assistant', 
+                content: `Error: ${message}`,
+                isError: true
+            }]);
         } finally {
             setIsLoading(false);
         }
@@ -126,16 +153,31 @@ export default function ConversationPage() {
         if (!serviceHealth) return null;
         
         const statusConfig = {
-            online: { color: 'text-green-400', bg: 'bg-green-500/20', text: 'Fast AI (GPU)', icon: '⚡' },
-            slow: { color: 'text-yellow-400', bg: 'bg-yellow-500/20', text: 'Slow AI (CPU)', icon: '🐢' },
-            offline: { color: 'text-red-400', bg: 'bg-red-500/20', text: 'AI Offline', icon: '❌' }
+            online: { 
+                color: 'text-green-400', 
+                bg: 'bg-green-500/20', 
+                text: 'Fast AI (GPU)', 
+                icon: <Zap className="w-4 h-4 text-green-400" />
+            },
+            slow: { 
+                color: 'text-yellow-400', 
+                bg: 'bg-yellow-500/20', 
+                text: 'Slow AI (CPU)', 
+                icon: <Turtle className="w-4 h-4 text-yellow-400" />
+            },
+            offline: { 
+                color: 'text-red-400', 
+                bg: 'bg-red-500/20', 
+                text: 'AI Offline', 
+                icon: <X className="w-4 h-4 text-red-400" />
+            }
         };
         
         const config = statusConfig[serviceHealth.status];
         
         return (
             <div className={`flex items-center space-x-2 px-3 py-1 rounded-full ${config.bg} border border-white/10`}>
-                <span className="text-sm">{config.icon}</span>
+                {config.icon}
                 <span className={`text-xs font-medium ${config.color}`}>{config.text}</span>
             </div>
         );
@@ -161,14 +203,15 @@ export default function ConversationPage() {
                         <div className="flex items-center space-x-4 relative right-10">
                             <button
                                 onClick={() => router.push('/chat')}
-                                className="p-2 hover:bg-white/10 rounded-lg transition-colors duration-200"
+                                className="p-2 hover:bg-white/10 rounded-lg transition-colors duration-200 flex items-center space-x-2"
                                 title="Back to conversations"
                             >
-                                <span className="text-xl">←</span>
+                                <ArrowLeft className="w-5 h-5" />
                             </button>
                             <div>
-                                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                                    🎓 Socratic Learning Session
+                                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent flex items-center space-x-2">
+                                    <GraduationCap className="w-6 h-6 text-blue-400" />
+                                    <span>Socratic Learning Session</span>
                                 </h1>
                                 <p className="text-sm text-gray-400">AI-powered personalized tutoring</p>
                             </div>
@@ -200,7 +243,7 @@ export default function ConversationPage() {
                     {serviceHealth?.status === 'offline' && (
                         <div className="mx-4 mb-4 p-4 bg-red-900/50 border border-red-500/30 rounded-lg backdrop-blur-sm">
                             <div className="flex items-center space-x-3">
-                                <span className="text-2xl">🚫</span>
+                                <XCircle className="w-6 h-6 text-red-400" />
                                 <div>
                                     <h3 className="font-semibold text-red-200">AI Services Temporarily Unavailable</h3>
                                     <p className="text-sm text-red-300">
@@ -221,7 +264,7 @@ export default function ConversationPage() {
                     {serviceHealth?.status === 'slow' && (
                         <div className="mx-4 mb-4 p-4 bg-yellow-900/50 border border-yellow-500/30 rounded-lg backdrop-blur-sm">
                             <div className="flex items-center space-x-3">
-                                <span className="text-2xl">🐢</span>
+                                <Turtle className="w-6 h-6 text-yellow-400" />
                                 <div>
                                     <h3 className="font-semibold text-yellow-200">Running on Backup CPU</h3>
                                     <p className="text-sm text-yellow-300">
@@ -242,7 +285,9 @@ export default function ConversationPage() {
                             </div>
                         ) : messages.length === 0 ? (
                             <div className="text-center py-16">
-                                <div className="text-6xl mb-4">🤖</div>
+                                <div className="flex justify-center mb-4">
+                                    <Bot className="w-16 h-16 text-blue-400" />
+                                </div>
                                 <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                                     Ready to Learn?
                                 </h2>
@@ -251,12 +296,16 @@ export default function ConversationPage() {
                                 </p>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
                                     <div className="p-4 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
-                                        <div className="text-xl mb-2">💡</div>
+                                        <div className="flex justify-center mb-2">
+                                            <Lightbulb className="w-6 h-6 text-yellow-400" />
+                                        </div>
                                         <h3 className="font-semibold mb-1">Ask Questions</h3>
                                         <p className="text-sm text-gray-400">I'll help you discover answers through guided inquiry</p>
                                     </div>
                                     <div className="p-4 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
-                                        <div className="text-xl mb-2">🧠</div>
+                                        <div className="flex justify-center mb-2">
+                                            <Brain className="w-6 h-6 text-purple-400" />
+                                        </div>
                                         <h3 className="font-semibold mb-1">Think Critically</h3>
                                         <p className="text-sm text-gray-400">Develop deeper understanding through questioning</p>
                                     </div>
@@ -266,15 +315,29 @@ export default function ConversationPage() {
                             messages.map((msg, index) => (
                                 <div key={index} className={`flex gap-4 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                     {msg.role === 'assistant' && (
-                                        <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold">
-                                            🤖
+                                        <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                            <Bot className="w-5 h-5 text-white" />
                                         </div>
                                     )}
                                     <div className={`p-4 rounded-2xl max-w-2xl backdrop-blur-sm border ${
                                         msg.role === 'user' 
                                             ? 'bg-gradient-to-r from-blue-600/80 to-purple-600/80 border-blue-500/30 text-white' 
+                                            : msg.isError
+                                            ? 'bg-red-900/50 border-red-500/30 text-red-100'
                                             : 'bg-white/10 border-white/20 text-gray-100'
                                     }`}>
+                                        {msg.role === 'assistant' && msg.source && (
+                                            <div className="mb-2 flex items-center space-x-1">
+                                                {msg.source === 'colab_gpu' && <Zap className="w-4 h-4 text-yellow-400" />}
+                                                {msg.source === 'hf_cpu_slow' && <Turtle className="w-4 h-4 text-green-400" />}
+                                                {(!msg.source || (msg.source !== 'colab_gpu' && msg.source !== 'hf_cpu_slow')) && <Bot className="w-4 h-4 text-blue-400" />}
+                                            </div>
+                                        )}
+                                        {msg.isError && (
+                                            <div className="mb-2 flex items-center space-x-1">
+                                                <X className="w-4 h-4 text-red-400" />
+                                            </div>
+                                        )}
                                         <div className="prose prose-invert max-w-none">
                                             <ReactMarkdown
                                                 remarkPlugins={[remarkGfm]}
@@ -294,8 +357,8 @@ export default function ConversationPage() {
                         )}
                         {isLoading && messages.length > 0 && (
                             <div className="flex gap-4 justify-start">
-                                <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center flex-shrink-0 text-sm font-bold">
-                                    🤖
+                                <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <Bot className="w-5 h-5 text-white" />
                                 </div>
                                 <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 animate-pulse">
                                     <div className="flex space-x-2">
@@ -335,12 +398,14 @@ export default function ConversationPage() {
                                 />
                                 <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm">
                                     {!serviceHealth?.chat_enabled ? (
-                                        <span className="bg-red-500/20 px-2 py-1 rounded text-xs text-red-300">
-                                            Service Offline ❌
+                                        <span className="bg-red-500/20 px-2 py-1 rounded text-xs text-red-300 flex items-center space-x-1">
+                                            <X className="w-3 h-3" />
+                                            <span>Service Offline</span>
                                         </span>
                                     ) : input.length > 0 && (
-                                        <span className="bg-blue-500/20 px-2 py-1 rounded text-xs">
-                                            Press Enter ↵
+                                        <span className="bg-blue-500/20 px-2 py-1 rounded text-xs flex items-center space-x-1">
+                                            <span>Press Enter</span>
+                                            <span>↵</span>
                                         </span>
                                     )}
                                 </div>
@@ -355,9 +420,13 @@ export default function ConversationPage() {
                                 disabled={isLoading || !input.trim() || !serviceHealth?.chat_enabled}
                             >
                                 <div className="relative z-10 flex items-center space-x-2">
-                                    <span>
-                                        {!serviceHealth?.chat_enabled ? '❌' : isLoading ? '⏳' : '💫'}
-                                    </span>
+                                    {!serviceHealth?.chat_enabled ? (
+                                        <X className="w-5 h-5" />
+                                    ) : isLoading ? (
+                                        <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
+                                    ) : (
+                                        <Send className="w-5 h-5" />
+                                    )}
                                     <span>
                                         {!serviceHealth?.chat_enabled ? 'Offline' : isLoading ? 'Thinking' : 'Send'}
                                     </span>

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import DotGrid from '@/components/DotGrid/DotGrid';
+import { MessageCircle, Plus, MessageSquare, LogOut } from 'lucide-react';
 
 interface Conversation { id: string; title: string; createdAt?: any; }
 
@@ -73,17 +74,16 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
                 <div className="relative z-10 flex flex-col h-full">
                     {/* Header */}
                     <div className="flex justify-between items-center mb-6 pb-4 border-b border-white/10">
-                        <h2 className="text-lg font-semibold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                            💬 Conversations
+                        <h2 className="text-lg font-semibold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent flex items-center space-x-2">
+                            <MessageCircle className="w-5 h-5 text-blue-400" />
+                            <span>Conversations</span>
                         </h2>
                         <Link 
                             href="/chat" 
                             className="p-2 rounded-lg hover:bg-white/10 transition-colors duration-200 group" 
                             title="New Chat"
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                            </svg>
+                            <Plus className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors" />
                         </Link>
                     </div>
 
@@ -101,7 +101,9 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
                     `}</style>
                         {conversations.length === 0 ? (
                             <div className="text-center py-8">
-                                <div className="text-3xl mb-2">💭</div>
+                                <div className="flex justify-center mb-2">
+                                    <MessageSquare className="w-8 h-8 text-gray-400" />
+                                </div>
                                 <p className="text-gray-400 text-sm">No conversations yet</p>
                                 <p className="text-gray-500 text-xs mt-1">Start a new chat to begin</p>
                             </div>
@@ -142,10 +144,11 @@ export default function ChatLayout({ children }: { children: ReactNode }) {
                             </div>
                             <button 
                                 onClick={logout} 
-                                className="px-3 py-1 bg-red-600/80 hover:bg-red-600 rounded-lg text-xs font-medium transition-colors duration-200 flex-shrink-0"
+                                className="px-3 py-1 bg-red-600/80 hover:bg-red-600 rounded-lg text-xs font-medium transition-colors duration-200 flex-shrink-0 flex items-center space-x-1"
                                 title="Sign out"
                             >
-                                🚪
+                                <LogOut className="w-3 h-3" />
+                                <span>Exit</span>
                             </button>
                         </div>
                     </div>

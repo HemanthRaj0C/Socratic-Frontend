@@ -4,6 +4,7 @@
 import { useRouter } from "next/navigation";
 import { User } from 'firebase/auth';
 import CircularText from '@/components/CircularText/CircularText';
+import { MessageCircle, ArrowRight } from 'lucide-react';
 
 interface WelcomePageProps {
   user: User;
@@ -21,12 +22,19 @@ export default function WelcomePage({ user }: WelcomePageProps) {
         </div>
         <div className="flex items-center space-x-4">
           <span className="text-sm text-gray-300">{user.displayName || user.email}</span>
-          <CircularText 
-            text="WELCOME•USER•" 
-            spinDuration={10}
-            onHover="slowDown"
-            className="bg-gradient-to-r from-slate-400 via-gray-500 to-slate-400 bg-clip-text text-transparent"
-          />
+          <div className="relative">
+            <CircularText 
+              text="WELCOME•USER•" 
+              spinDuration={5}
+              onHover="slowDown"
+              className="bg-gradient-to-r from-slate-400 via-gray-500 to-slate-400 bg-clip-text text-transparent"
+            />
+            <div className="absolute inset-0 flex items-center justify-center -z-50">
+              <span className="text-3xl font-bold bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent p-3 rounded-full">
+                {user?.displayName?.[0] || user?.email?.[0] || 'U'}
+              </span>
+            </div>
+          </div>
         </div>
       </header>
 
@@ -51,9 +59,9 @@ export default function WelcomePage({ user }: WelcomePageProps) {
           >
             {/* Button Content */}
             <div className="relative z-10 flex items-center justify-center space-x-3">
-              <span>💬</span>
+              <MessageCircle className="w-5 h-5" />
               <span>Start Learning</span>
-              <span className="transform group-hover:translate-x-1 transition-transform duration-300">→</span>
+              <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" />
             </div>
             
             {/* Animated Background Gradient */}

@@ -15,29 +15,6 @@
   transition: all 0.3s ease;
 }
 
-.circular-text::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 50%;
-  height: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6, #06b6d4);
-  background-size: 200% 200%;
-  animation: gradient-shift 3s ease infinite;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-  transition: all 0.3s ease;
-  z-index: -1;
-}
-
-.circular-text:hover::before {
-  background: linear-gradient(135deg, #1d4ed8, #7c3aed, #0891b2);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.5);
-  width: 60%;
-  height: 60%;
-}
 
 @keyframes gradient-shift {
   0% {
