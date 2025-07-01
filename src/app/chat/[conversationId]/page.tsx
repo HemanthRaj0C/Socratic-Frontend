@@ -123,13 +123,6 @@ export default function ConversationPage() {
             
             const data = await response.json();
             
-            // Add the assistant's reply to the messages with source indicator
-            const getSourceIcon = (source: string) => {
-                if (source === 'colab_gpu') return <Zap className="w-4 h-4 inline mr-1 text-yellow-400" />;
-                if (source === 'hf_cpu_slow') return <Turtle className="w-4 h-4 inline mr-1 text-green-400" />;
-                return <Bot className="w-4 h-4 inline mr-1 text-blue-400" />;
-            };
-            
             setMessages(prev => [...prev, { 
                 role: 'assistant', 
                 content: data.reply,
@@ -326,7 +319,7 @@ export default function ConversationPage() {
                                             ? 'bg-red-900/50 border-red-500/30 text-red-100'
                                             : 'bg-white/10 border-white/20 text-gray-100'
                                     }`}>
-                                        {msg.role === 'assistant' && msg.source && (
+                                        {msg.role === 'assistant' && (
                                             <div className="mb-2 flex items-center space-x-1">
                                                 {msg.source === 'colab_gpu' && <Zap className="w-4 h-4 text-yellow-400" />}
                                                 {msg.source === 'hf_cpu_slow' && <Turtle className="w-4 h-4 text-green-400" />}
