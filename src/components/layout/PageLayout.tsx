@@ -17,7 +17,7 @@ interface ServiceHealth {
   status: 'online' | 'slow' | 'offline'; 
   service: string; 
   chat_enabled: boolean;
-  details?: {
+  services?: {
     colab: string;
     huggingface: string;
   };
@@ -156,9 +156,9 @@ export default function PageLayout({ children }: PageLayoutProps) {
 
                 {/* Colab Status */}
                 <div className={`p-4 rounded-lg border backdrop-blur-sm ${
-                  serviceHealth.service === 'colab_gpu'
+                  serviceHealth.services?.colab === 'online'
                     ? 'bg-green-900/30 border-green-500/30'
-                    : serviceHealth.details?.colab === 'not_configured'
+                    : serviceHealth.services?.colab === 'not_configured'
                     ? 'bg-gray-900/30 border-gray-500/30'
                     : 'bg-red-900/30 border-red-500/30'
                 }`}>
@@ -167,16 +167,16 @@ export default function PageLayout({ children }: PageLayoutProps) {
                     <div>
                       <h4 className="font-semibold text-sm">Google Colab (GPU)</h4>
                       <p className={`text-xs ${
-                        serviceHealth.service === 'colab_gpu'
+                        serviceHealth.services?.colab === 'online'
                           ? 'text-green-300'
-                          : serviceHealth.details?.colab === 'not_configured'
+                          : serviceHealth.services?.colab === 'not_configured'
                           ? 'text-gray-300'
                           : 'text-red-300'
                       }`}>
-                        {serviceHealth.service === 'colab_gpu' ? 'Online (Active)' :
-                         serviceHealth.details?.colab === 'not_configured' ? 'Not Configured' :
-                         serviceHealth.details?.colab === 'offline' ? 'Offline' :
-                         serviceHealth.service === 'hf_cpu_slow' ? 'Standby' : 'Offline'}
+                        {serviceHealth.services?.colab === 'online' ? 'Online' :
+                         serviceHealth.services?.colab === 'not_configured' ? 'Not Configured' :
+                         'Offline'}
+                        {serviceHealth.service === 'colab_gpu' && serviceHealth.services?.colab === 'online' ? ' (Active)' : ''}
                       </p>
                     </div>
                   </div>
@@ -184,9 +184,11 @@ export default function PageLayout({ children }: PageLayoutProps) {
 
                 {/* HuggingFace Status */}
                 <div className={`p-4 rounded-lg border backdrop-blur-sm ${
-                  serviceHealth.service === 'hf_cpu_slow'
-                    ? 'bg-yellow-900/30 border-yellow-500/30'
-                    : serviceHealth.details?.huggingface === 'not_configured'
+                  serviceHealth.services?.huggingface === 'online'
+                    ? serviceHealth.service === 'hf_cpu_slow' 
+                      ? 'bg-yellow-900/30 border-yellow-500/30'
+                      : 'bg-green-900/30 border-green-500/30'
+                    : serviceHealth.services?.huggingface === 'not_configured'
                     ? 'bg-gray-900/30 border-gray-500/30'
                     : 'bg-red-900/30 border-red-500/30'
                 }`}>
@@ -195,16 +197,18 @@ export default function PageLayout({ children }: PageLayoutProps) {
                     <div>
                       <h4 className="font-semibold text-sm">HuggingFace (CPU)</h4>
                       <p className={`text-xs ${
-                        serviceHealth.service === 'hf_cpu_slow'
-                          ? 'text-yellow-300'
-                          : serviceHealth.details?.huggingface === 'not_configured'
+                        serviceHealth.services?.huggingface === 'online'
+                          ? serviceHealth.service === 'hf_cpu_slow'
+                            ? 'text-yellow-300'
+                            : 'text-green-300'
+                          : serviceHealth.services?.huggingface === 'not_configured'
                           ? 'text-gray-300'
                           : 'text-red-300'
                       }`}>
-                        {serviceHealth.service === 'hf_cpu_slow' ? 'Online (Active)' :
-                         serviceHealth.details?.huggingface === 'not_configured' ? 'Not Configured' :
-                         serviceHealth.details?.huggingface === 'offline' ? 'Offline' :
-                         serviceHealth.service === 'colab_gpu' ? 'Standby' : 'Offline'}
+                        {serviceHealth.services?.huggingface === 'online' ? 'Online' :
+                         serviceHealth.services?.huggingface === 'not_configured' ? 'Not Configured' :
+                         'Offline'}
+                        {serviceHealth.service === 'hf_cpu_slow' && serviceHealth.services?.huggingface === 'online' ? ' (Active)' : ''}
                       </p>
                     </div>
                   </div>
