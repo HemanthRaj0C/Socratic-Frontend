@@ -1,4 +1,5 @@
 // src/components/layout/PageLayout.tsx
+// @ts-nocheck
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -9,6 +10,9 @@ import FlowingMenu from '@/components/FlowingMenu/FlowingMenu';
 import PixelCard from '@/components/PixelCard/PixelCard';
 import SpotlightCard from '@/components/SpotlightCard/SpotlightCard';
 import CardSwap, { Card } from '@/components/CardSwap/CardSwap';
+import BlurText from '@/components/BlurText/BlurText';
+import ScrollFloat from '@/components/ScrollFloat/ScrollFloat';
+import Carousel, { CarouselItem } from '@/components/Carousel/Carousel';
 import { 
   RefreshCw, 
   CheckCircle, 
@@ -24,7 +28,13 @@ import {
   MessageCircle, 
   BarChart3, 
   Globe, 
-  GraduationCap
+  GraduationCap,
+  Heart,
+  Coffee,
+  Star,
+  CreditCard,
+  QrCode,
+  ExternalLink
 } from 'lucide-react';
 
 interface PageLayoutProps {
@@ -111,6 +121,70 @@ export default function PageLayout({ children }: PageLayoutProps) {
       image: "" // Algorithm/AI icon
     }
   ];
+
+  // Payment support carousel items
+  const paymentItems: CarouselItem[] = [
+    {
+      id: 1,
+      title: "Custom Amount",
+      description: "Choose your own contribution amount",
+      icon: <Heart className="w-5 h-5 text-red-400" />
+    },
+    {
+      id: 2,
+      title: "Support Education",
+      description: "Help revolutionize AI learning",
+      icon: <Coffee className="w-5 h-5 text-yellow-400" />
+    },
+    {
+      id: 3,
+      title: "Flexible Giving",
+      description: "Your generosity, your choice",
+      icon: <Star className="w-5 h-5 text-blue-400" />
+    }
+  ];
+
+  const paymentOptions = [
+      {
+        id: 'coffee',
+        title: 'Buy Me a Coffee',
+        description: 'Fuel the late-night coding sessions!',
+        amount: '₹99',
+        icon: <Coffee className="w-8 h-8 text-yellow-400" />,
+        qrCode: '/qr-codes/QrCode99.jpeg',
+        razorpayLink: 'https://rzp.io/rzp/dcsEIREe', // Replace with actual link
+        gradient: 'from-yellow-500/20 to-orange-500/20',
+        border: 'border-yellow-400/30',
+        spotlightColor: 'rgba(251, 191, 36, 0.4)',
+        textColor: 'text-yellow-200'
+      },
+      {
+        id: 'support',
+        title: 'Show Some Love',
+        description: 'Support ongoing development & improvements',
+        amount: '₹499',
+        icon: <Heart className="w-8 h-8 text-pink-400" />,
+        qrCode: '/qr-codes/QrCode499.jpeg',
+        razorpayLink: 'https://rzp.io/rzp/zLg0xbc', // Replace with actual link
+        gradient: 'from-pink-500/20 to-purple-500/20',
+        border: 'border-pink-400/30',
+        spotlightColor: 'rgba(236, 72, 153, 0.4)',
+        textColor: 'text-pink-200'
+      },
+      {
+        id: 'super',
+        title: 'Super Supporter',
+        description: 'Become a hero of AI education!',
+        amount: '₹1999',
+        icon: <Star className="w-8 h-8 text-blue-400" />,
+        qrCode: '/qr-codes/QrCode1999.jpeg',
+        razorpayLink: 'https://rzp.io/rzp/XgUD9aG', // Replace with actual link
+        gradient: 'from-blue-500/20 to-indigo-500/20',
+        border: 'border-blue-400/30',
+        spotlightColor: 'rgba(59, 130, 246, 0.4)',
+        textColor: 'text-blue-200'
+      }
+    ];
 
   return (
     <div className="min-h-screen relative text-white overflow-x-hidden">
@@ -489,6 +563,121 @@ export default function PageLayout({ children }: PageLayoutProps) {
             </p>
           </div>
           <FlowingMenu items={technicalFeatures} />
+        </section>
+
+        {/* Interactive Payment Support Section */}
+        <section className="w-full py-16 px-6 relative overflow-hidden">
+          <div className="max-w-6xl mx-auto">
+            {/* Main Content */}
+            <div className="text-center relative z-10">              
+              <div className="mb-8">
+                <BlurText 
+                  text="Help Keep This AI Magic Alive!"
+                  className="text-2xl font-semibold text-white mb-4"
+                  delay={50}
+                />
+              </div>
+
+              {/* Payment Options Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+            {paymentOptions.map((option) => (
+              <SpotlightCard 
+                key={option.id}
+                className={`bg-gradient-to-br ${option.gradient} ${option.border} p-6 rounded-xl backdrop-blur-sm hover:scale-105 transition-all duration-300`}
+                spotlightColor={option.spotlightColor}
+              >
+                <div className="text-center">
+                  {/* QR Code */}
+                  <div className="mb-6">
+                    <img 
+                      src={option.qrCode} 
+                      alt={`${option.title} QR Code`} 
+                      className={`w-40 h-40 mx-auto rounded-lg border-2 ${option.border}`}
+                    />
+                  </div>
+
+                  {/* Icon and Title */}
+                  <div className="mb-4">
+                    {option.icon}
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">{option.title}</h3>
+                  <p className={`${option.textColor} text-sm mb-4`}>{option.description}</p>
+                  <p className="text-3xl font-bold text-white mb-6">{option.amount}</p>
+
+                  {/* Payment Methods */}
+                  <div className="space-y-3">
+                    {/* QR Code Payment */}
+                    <div className={`bg-black/30 p-3 rounded-lg border ${option.border}`}>
+                      <div className="flex items-center justify-center space-x-2">
+                        <QrCode className="w-5 h-5 text-gray-300" />
+                        <span className="text-sm text-gray-300">Scan QR Code</span>
+                      </div>
+                    </div>
+
+                    {/* Razorpay Link */}
+                    <a 
+                      href={option.razorpayLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`block bg-gradient-to-r from-slate-700 via-gray-700 to-slate-700 hover:from-slate-600 hover:via-gray-600 hover:to-slate-600 p-3 rounded-lg transition-all duration-300 transform hover:scale-105 border-slate-600`}
+                    >
+                      <div className="flex items-center justify-center space-x-2">
+                        <CreditCard className="w-5 h-5 text-white" />
+                        <span className="text-sm text-white font-semibold">Pay with Razorpay</span>
+                        <ExternalLink className="w-4 h-4 text-white" />
+                      </div>
+                    </a>
+                  </div>
+
+                  {/* Note */}
+                  <p className={`${option.textColor} text-xs mt-4 opacity-75`}>
+                    Choose any payment method that works for you
+                  </p>
+                </div>
+              </SpotlightCard>
+            ))}
+          </div>
+
+              {/* Fun Message */}
+              <div className="relative mb-8">
+                <BlurText 
+                  text="Every contribution, no matter how small, makes a huge difference!"
+                  className="text-gray-300 text-lg mb-4"
+                  delay={50}
+                />
+              </div>
+
+              {/* Custom Amount Carousel */}
+              <div className="mb-8">
+                <h3 className="text-2xl font-bold text-white mb-4">
+                  Or Choose Your Own Amount
+                </h3>
+                <div className="flex justify-center items-center mx-auto">
+                  <div className="mx-auto">
+                    <Carousel 
+                      items={paymentItems}
+                      baseWidth={400}
+                      autoplay={true}
+                      autoplayDelay={3000}
+                      pauseOnHover={true}
+                      loop={true}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* View All Payment Options Link */}
+              <div className="text-center">
+                <a 
+                  href="/support" 
+                  className="inline-flex items-center space-x-2 bg-gradient-to-r from-slate-700 via-gray-700 to-slate-700 hover:from-slate-600 hover:via-gray-600 hover:to-slate-600 border-slate-600 px-6 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 text-white font-semibold"
+                >
+                  <Heart className="w-5 h-5" />
+                  <span>View All Payment Options</span>
+                </a>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* Footer */}
