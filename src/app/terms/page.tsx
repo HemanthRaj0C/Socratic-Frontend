@@ -2,7 +2,7 @@
 'use client';
 
 import PageLayout from '@/components/layout/PageLayout';
-import { Shield, Calendar, FileText, Phone, Mail, Lock, Users } from 'lucide-react';
+import { Shield, Calendar, FileText, Phone, Mail, Lock, Users, ExternalLink } from 'lucide-react';
 
 export default function TermsPage() {
   return (
@@ -19,6 +19,25 @@ export default function TermsPage() {
             <div className="flex items-center justify-center text-gray-400 text-sm">
               <Calendar className="w-4 h-4 mr-2" />
               Last updated on June 25, 2025
+            </div>
+          </div>
+
+          {/* Razorpay Terms Link */}
+          <div className="mb-8 text-center">
+            <div className="bg-blue-900/20 p-6 rounded-xl border border-blue-500/30">
+              <h3 className="text-lg font-semibold text-white mb-3">Official Terms & Conditions</h3>
+              <p className="text-gray-300 mb-4">
+                For the most up-to-date and legally binding terms and conditions, please visit our official Razorpay terms page.
+              </p>
+              <a 
+                href="https://merchant.razorpay.com/policy/Q6ZFaYSG19DvEB/terms"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200"
+              >
+                <ExternalLink className="w-5 h-5 mr-2" />
+                View Official Terms on Razorpay
+              </a>
             </div>
           </div>
 
