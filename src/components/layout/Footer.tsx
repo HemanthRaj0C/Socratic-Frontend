@@ -68,7 +68,7 @@ export default function Footer({ serviceHealth }: FooterProps) {
         </div>
         
         {/* Bottom Row - Copyright */}
-        <div className="text-center">
+        <div className="text-center pb-6">
           <p className="text-gray-400 text-sm">{currentYear} Socratic AI - Empowering Learning Through Questions</p>
         </div>
       </div>

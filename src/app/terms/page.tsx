@@ -3,9 +3,58 @@
 
 import PageLayout from '@/components/layout/PageLayout';
 import { Shield, Calendar, FileText, Phone, Mail, Lock, Users, ExternalLink } from 'lucide-react';
+import Footer from '@/components/layout/Footer';
+import { useState, useEffect } from 'react';
+
+interface ServiceHealth { 
+    status: 'online' | 'slow' | 'offline'; 
+    service: string; 
+    chat_enabled: boolean;
+    services?: {
+      colab: string;
+      huggingface: string;
+    };
+  }
 
 export default function TermsPage() {
-  return (
+    const [serviceHealth, setServiceHealth] = useState<ServiceHealth | null>(null);
+    
+    // Check service health
+    useEffect(() => {
+    const checkHealth = async () => {
+        try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/health`);
+        if (response.ok) {
+            const health = await response.json();
+            setServiceHealth(health);
+        }
+        } catch (error) {
+        console.error('Health check failed:', error);
+        setServiceHealth({ status: 'offline', service: 'none', chat_enabled: false });
+        }
+    };
+    checkHealth();
+    
+    // Check every 30 seconds
+    const interval = setInterval(checkHealth, 30000);
+    return () => clearInterval(interval);
+    }, []);
+
+    const refreshServiceStatus = async () => {
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/health`);
+        if (response.ok) {
+        const health = await response.json();
+        setServiceHealth(health);
+        }
+    } catch (error) {
+        console.error('Health check failed:', error);
+        setServiceHealth({ status: 'offline', service: 'none', chat_enabled: false });
+    }
+    };
+
+    return (
+      <>
       <div className="min-h-screen py-16 px-6">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
@@ -362,7 +411,9 @@ export default function TermsPage() {
               </div>
             </div>
           </div>
-        </div>
+          </div>
       </div>
+      <Footer serviceHealth={serviceHealth}/>
+      </>
   );
 }
