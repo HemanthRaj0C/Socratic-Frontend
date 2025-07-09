@@ -2,6 +2,7 @@
 'use client';
 
 import SpotlightCard from '@/components/SpotlightCard/SpotlightCard';
+import PaymentButton from '@/components/Payment/PaymentButton';
 import { HelpCircle, Target, Lightbulb, Mail, Link, Smartphone } from 'lucide-react';
 
 interface LandingPageProps {
@@ -106,6 +107,43 @@ export default function LandingPage({ onLogin }: LandingPageProps) {
                 <Smartphone className="w-5 h-5 text-gray-400" />
               </div>
             </div>
+          </div>
+
+          {/* Premium Access Section */}
+          <div className="mt-12 p-6 bg-gray-800 rounded-lg border border-gray-700">
+            <h3 className="text-lg font-semibold mb-2">Premium Access</h3>
+            <p className="text-sm text-gray-300 mb-4">
+              Get unlimited access to advanced AI tutoring features
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <PaymentButton
+                amount={499}
+                description="Monthly Premium Access"
+                onSuccess={(data) => {
+                  alert('Payment successful! Welcome to Premium! 🎉');
+                  console.log('Payment successful:', data);
+                }}
+                onError={(error) => {
+                  alert(`Payment failed: ${error.description || error.message || 'Please try again'}`);
+                  console.error('Payment error:', error);
+                }}
+              />
+              <PaymentButton
+                amount={999}
+                description="Annual Premium Access (Save 58%!)"
+                onSuccess={(data) => {
+                  alert('Payment successful! Welcome to Annual Premium! 🎉');
+                  console.log('Payment successful:', data);
+                }}
+                onError={(error) => {
+                  alert(`Payment failed: ${error.description || error.message || 'Please try again'}`);
+                  console.error('Payment error:', error);
+                }}
+              />
+            </div>
+            <p className="text-xs text-gray-500 mt-3 text-center">
+              Secure payments powered by Razorpay
+            </p>
           </div>
         </div>
       </div>
