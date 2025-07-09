@@ -71,23 +71,6 @@ export default function WelcomePage({ user }: WelcomePageProps) {
               {/* Shine Effect */}
               <div className="absolute inset-0 -skew-x-12 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
             </button>
-
-            <button 
-              onClick={() => router.push('/payment')} 
-              className="group relative px-8 py-4 bg-gradient-to-r from-blue-700 via-blue-600 to-blue-700 hover:from-blue-600 hover:via-blue-500 hover:to-blue-600 rounded-xl text-lg font-semibold text-white transition-all duration-300 transform hover:scale-105 shadow-xl hover:shadow-2xl overflow-hidden min-w-[180px] border border-blue-600"
-            >
-              {/* Button Content */}
-              <div className="relative z-10 flex items-center justify-center space-x-3">
-                <CreditCard className="w-5 h-5" />
-                <span>Payment Demo</span>
-              </div>
-              
-              {/* Animated Background Gradient */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              
-              {/* Shine Effect */}
-              <div className="absolute inset-0 -skew-x-12 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-            </button>
           </div>
         </div>
       </div>
