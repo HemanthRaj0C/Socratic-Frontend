@@ -99,6 +99,19 @@ export default function ConversationPage() {
         chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages, isLoading]);
 
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            if (!input.trim() || isLoading || !user || !serviceHealth?.chat_enabled) return;
+            
+            // Create a synthetic form event
+            const syntheticEvent = {
+                preventDefault: () => {},
+            } as FormEvent;
+            handleSubmit(syntheticEvent);
+        }
+    };
+
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         if (!input.trim() || isLoading || !user || !serviceHealth?.chat_enabled) return;
@@ -365,10 +378,10 @@ export default function ConversationPage() {
                     <div className="relative z-10 max-w-4xl mx-auto">
                         <form onSubmit={handleSubmit} className="flex gap-2 md:gap-3">
                             <div className="flex-grow relative">
-                                <input 
-                                    type="text" 
+                                <textarea 
                                     value={input} 
                                     onChange={(e) => setInput(e.target.value)} 
+                                    onKeyDown={handleKeyDown}
                                     placeholder={
                                         !serviceHealth?.chat_enabled 
                                             ? "AI services are currently offline. Please try again later..." 
@@ -376,11 +389,21 @@ export default function ConversationPage() {
                                             ? "AI is running on slow CPU - responses may take longer..."
                                             : "Ask me anything... I'll guide you to the answer"
                                     }
-                                    className={`w-full p-3 md:p-4 bg-white/10 backdrop-blur-sm rounded-2xl border transition-all duration-200 text-white placeholder-gray-400 text-sm md:text-base ${
+                                    rows={1}
+                                    className={`w-full p-3 md:p-4 bg-white/10 backdrop-blur-sm rounded-2xl border transition-all duration-200 text-white placeholder-gray-400 text-sm md:text-base resize-none overflow-hidden ${
                                         !serviceHealth?.chat_enabled 
                                             ? 'border-red-500/30 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50' 
                                             : 'border-white/20 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50'
                                     }`}
+                                    style={{
+                                        minHeight: '52px',
+                                        maxHeight: '120px'
+                                    }}
+                                    onInput={(e) => {
+                                        const target = e.target as HTMLTextAreaElement;
+                                        target.style.height = 'auto';
+                                        target.style.height = Math.min(target.scrollHeight, 120) + 'px';
+                                    }}
                                     disabled={isLoading || !serviceHealth?.chat_enabled}
                                 />
                                 <div className="absolute right-2 md:right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-xs md:text-sm">
@@ -392,8 +415,8 @@ export default function ConversationPage() {
                                         </span>
                                     ) : input.length > 0 && (
                                         <span className="bg-blue-500/20 px-2 py-1 rounded text-xs flex items-center space-x-1">
-                                            <span className="hidden sm:inline">Press Enter</span>
-                                            <span>↵</span>
+                                            <span className="hidden sm:inline">Enter to send • Shift+Enter for new line</span>
+                                            <span className="sm:hidden">↵ Send • ⇧↵ New line</span>
                                         </span>
                                     )}
                                 </div>
