@@ -4,7 +4,6 @@ import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext"; // Import the provider
 import { Analytics } from '@vercel/analytics/next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
-import MobileWrapper from "@/components/MobileWrapper/MobileWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,9 +37,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <MobileWrapper>
             {children}
-          </MobileWrapper>
         </AuthProvider>
         <Analytics />
         <SpeedInsights />

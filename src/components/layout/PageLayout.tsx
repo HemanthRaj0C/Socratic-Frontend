@@ -203,13 +203,13 @@ export default function PageLayout({ children }: PageLayoutProps) {
 
         {/* Service Status Section */}
         {serviceHealth && (
-          <section className="w-full py-8 px-6 border-t border-white/10 bg-black/20 backdrop-blur-sm">
+          <section className="w-full py-6 sm:py-8 px-4 sm:px-6 border-t border-white/10 bg-black/20 backdrop-blur-sm">
             <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-6">
-                <h3 className="text-xl font-semibold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <div className="text-center mb-4 sm:mb-6">
+                <h3 className="text-lg sm:text-xl font-semibold mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                   AI Service Status
                 </h3>
-                <p className="text-gray-400 text-sm mb-3">
+                <p className="text-gray-400 text-xs sm:text-sm mb-3">
                   Real-time status of our AI infrastructure
                 </p>
                 <div className="flex justify-center">
@@ -223,10 +223,10 @@ export default function PageLayout({ children }: PageLayoutProps) {
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                 {/* Overall Status */}
                 <SpotlightCard 
-                  className={`p-4 rounded-lg backdrop-blur-sm ${
+                  className={`p-3 sm:p-4 rounded-lg backdrop-blur-sm ${
                     serviceHealth.status === 'online' 
                       ? 'bg-green-900/30 border-green-500/30' 
                       : serviceHealth.status === 'slow'
@@ -241,17 +241,17 @@ export default function PageLayout({ children }: PageLayoutProps) {
                       : "rgba(239, 68, 68, 0.3)"
                   }
                 >
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2 sm:space-x-3">
                     {serviceHealth.status === 'online' ? (
-                      <CheckCircle className="w-6 h-6 text-green-400" />
+                      <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-400 flex-shrink-0" />
                     ) : serviceHealth.status === 'slow' ? (
-                      <AlertCircle className="w-6 h-6 text-yellow-400" />
+                      <AlertCircle className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-400 flex-shrink-0" />
                     ) : (
-                      <XCircle className="w-6 h-6 text-red-400" />
+                      <XCircle className="w-5 h-5 sm:w-6 sm:h-6 text-red-400 flex-shrink-0" />
                     )}
                     <div>
-                      <h4 className="font-semibold">Overall Status</h4>
-                      <p className={`text-sm ${
+                      <h4 className="font-semibold text-sm sm:text-base">Overall Status</h4>
+                      <p className={`text-xs sm:text-sm ${
                         serviceHealth.status === 'online' ? 'text-green-300' : 
                         serviceHealth.status === 'slow' ? 'text-yellow-300' : 'text-red-300'
                       }`}>
@@ -264,7 +264,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
 
                 {/* Colab Status */}
                 <SpotlightCard 
-                  className={`p-4 rounded-lg backdrop-blur-sm ${
+                  className={`p-3 sm:p-4 rounded-lg backdrop-blur-sm ${
                     serviceHealth.services?.colab === 'online'
                       ? 'bg-green-900/30 border-green-500/30'
                       : serviceHealth.services?.colab === 'not_configured'
@@ -279,10 +279,10 @@ export default function PageLayout({ children }: PageLayoutProps) {
                       : "rgba(239, 68, 68, 0.3)"
                   }
                 >
-                  <div className="flex items-center space-x-3">
-                    <Zap className="w-5 h-5 text-yellow-400" />
+                  <div className="flex items-center space-x-2 sm:space-x-3">
+                    <Zap className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold text-sm">Google Colab (GPU)</h4>
+                      <h4 className="font-semibold text-xs sm:text-sm">Google Colab (GPU)</h4>
                       <p className={`text-xs ${
                         serviceHealth.services?.colab === 'online'
                           ? 'text-green-300'
@@ -301,7 +301,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
 
                 {/* HuggingFace Status */}
                 <SpotlightCard 
-                  className={`p-4 rounded-lg backdrop-blur-sm ${
+                  className={`p-3 sm:p-4 rounded-lg backdrop-blur-sm sm:col-span-2 md:col-span-1 ${
                     serviceHealth.services?.huggingface === 'online'
                       ? serviceHealth.service === 'hf_cpu_slow' 
                         ? 'bg-yellow-900/30 border-yellow-500/30'
@@ -320,10 +320,10 @@ export default function PageLayout({ children }: PageLayoutProps) {
                       : "rgba(239, 68, 68, 0.3)"
                   }
                 >
-                  <div className="flex items-center space-x-3">
-                    <Turtle className="w-5 h-5 text-green-400" />
+                  <div className="flex items-center space-x-2 sm:space-x-3">
+                    <Turtle className="w-4 h-4 sm:w-5 sm:h-5 text-green-400 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold text-sm">HuggingFace (CPU)</h4>
+                      <h4 className="font-semibold text-xs sm:text-sm">HuggingFace (CPU)</h4>
                       <p className={`text-xs ${
                         serviceHealth.services?.huggingface === 'online'
                           ? serviceHealth.service === 'hf_cpu_slow'
@@ -343,7 +343,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
                 </SpotlightCard>
               </div>
 
-              <div className="text-center mt-4">
+              <div className="text-center mt-3 sm:mt-4">
                 <p className={`text-xs ${
                   serviceHealth.chat_enabled ? 'text-green-400' : 'text-red-400'
                 }`}>
@@ -355,12 +355,12 @@ export default function PageLayout({ children }: PageLayoutProps) {
         )}
 
         {/* Developer Information Section */}
-        <section className="w-full py-12 px-6 flex gap-10">
+        <section className="w-full py-8 sm:py-12 px-4 sm:px-6 flex gap-6 sm:gap-10">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               Crafted with Excellence
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12 md:gap-20">
               
               {/* Developer Info Card */}
               <PixelCard 
@@ -368,20 +368,20 @@ export default function PageLayout({ children }: PageLayoutProps) {
                 className='bg-black/30 backdrop-blur-sm'
               >
                 <div className="text-center absolute">
-                  <div className="flex justify-center mb-4">
-                    <User className="w-12 h-12 text-blue-400" />
+                  <div className="flex justify-center mb-3 sm:mb-4">
+                    <User className="w-8 h-8 sm:w-12 sm:h-12 text-blue-400" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2">Hemanth Raj</h3>
-                  <p className="text-blue-400 font-semibold mb-3">Lead Developer & AI Engineer</p>
-                  <p className="text-gray-300 text-sm mb-4">
+                  <h3 className="text-lg sm:text-xl font-bold mb-2">Hemanth Raj</h3>
+                  <p className="text-blue-400 font-semibold mb-2 sm:mb-3 text-sm sm:text-base">Lead Developer & AI Engineer</p>
+                  <p className="text-gray-300 text-xs sm:text-sm mb-3 sm:mb-4">
                     Passionate about creating intelligent educational systems that transform learning experiences through innovative AI technology.
                   </p>
-                  <div className="flex justify-center space-x-4">
+                  <div className="flex justify-center space-x-3 sm:space-x-4">
                     <a href="https://www.linkedin.com/in/hemanthrajc" target='_blank' referrerPolicy='no-referrer' className="text-blue-400 hover:text-blue-300 transition-colors">
-                      <span className="text-sm">LinkedIn</span>
+                      <span className="text-xs sm:text-sm">LinkedIn</span>
                     </a>
                     <a href="https://github.com/HemanthRaj0C" target='_blank' referrerPolicy='no-referrer' className="text-blue-400 hover:text-blue-300 transition-colors">
-                      <span className="text-sm">GitHub</span>
+                      <span className="text-xs sm:text-sm">GitHub</span>
                     </a>
                   </div>
                 </div>
@@ -393,12 +393,12 @@ export default function PageLayout({ children }: PageLayoutProps) {
                 className='bg-black/30 backdrop-blur-sm'
               >
                 <div className="text-center absolute">
-                  <div className="flex justify-center mb-4">
-                    <Rocket className="w-12 h-12 text-pink-400" />
+                  <div className="flex justify-center mb-3 sm:mb-4">
+                    <Rocket className="w-8 h-8 sm:w-12 sm:h-12 text-pink-400" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2">Project Vision</h3>
-                  <p className="text-pink-400 font-semibold mb-3">Revolutionizing Education</p>
-                  <p className="text-gray-300 text-sm mb-4">
+                  <h3 className="text-lg sm:text-xl font-bold mb-2">Project Vision</h3>
+                  <p className="text-pink-400 font-semibold mb-2 sm:mb-3 text-sm sm:text-base">Revolutionizing Education</p>
+                  <p className="text-gray-300 text-xs sm:text-sm mb-3 sm:mb-4">
                     Built with cutting-edge technology stack including Next.js, TypeScript, Firebase, and fine-tuned AI models to deliver exceptional learning experiences.
                   </p>
                   <div className="text-xs text-gray-400 space-y-1">
@@ -415,34 +415,34 @@ export default function PageLayout({ children }: PageLayoutProps) {
         </section>
         
         {/* Core Features Showcase */}
-        <section className="w-full py-16 px-6">
+        <section className="w-full py-12 sm:py-16 px-4 sm:px-6">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <div className="text-center mb-8 sm:mb-12">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent leading-tight">
                 Experience Next-Generation Learning
               </h2>
-              <p className="text-gray-300 text-lg max-w-3xl mx-auto">
+              <p className="text-gray-300 text-base sm:text-lg max-w-3xl mx-auto px-2">
                 Discover the powerful features that make our Socratic AI platform revolutionary in educational technology
               </p>
             </div>
             
-            <div className="relative -right-20">
+            <div className="relative -right-0 sm:-right-10 md:-right-20">
               <CardSwap
-                width={320}
-                height={220}
-                cardDistance={45}
-                verticalDistance={25}
+                width={280}
+                height={200}
+                cardDistance={35}
+                verticalDistance={20}
                 delay={3500}
                 pauseOnHover={true}
-                skewAmount={6}
+                skewAmount={4}
                 easing="elastic"
               >
-                <Card className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white text-center shadow-2xl border border-blue-400/20">
-                  <div className="flex justify-center mb-3">
-                    <Brain className="w-8 h-8" />
+                <Card className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-4 sm:p-6 text-white text-center shadow-2xl border border-blue-400/20">
+                  <div className="flex justify-center mb-2 sm:mb-3">
+                    <Brain className="w-6 h-6 sm:w-8 sm:h-8" />
                   </div>
-                  <h4 className="font-bold text-lg mb-2">Smart AI Reasoning</h4>
-                  <p className="text-sm text-blue-100 mb-3">Advanced Mistral-based neural networks</p>
+                  <h4 className="font-bold text-base sm:text-lg mb-1 sm:mb-2">Smart AI Reasoning</h4>
+                  <p className="text-xs sm:text-sm text-blue-100 mb-2 sm:mb-3">Advanced Mistral-based neural networks</p>
                   <div className="text-xs text-blue-200 space-y-1">
                     <p>• Natural Language Understanding</p>
                     <p>• Context-Aware Responses</p>
@@ -450,12 +450,12 @@ export default function PageLayout({ children }: PageLayoutProps) {
                   </div>
                 </Card>
                 
-                <Card className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white text-center shadow-2xl border border-purple-400/20">
-                  <div className="flex justify-center mb-3">
-                    <Zap className="w-8 h-8" />
+                <Card className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-4 sm:p-6 text-white text-center shadow-2xl border border-purple-400/20">
+                  <div className="flex justify-center mb-2 sm:mb-3">
+                    <Zap className="w-6 h-6 sm:w-8 sm:h-8" />
                   </div>
-                  <h4 className="font-bold text-lg mb-2">Lightning Fast</h4>
-                  <p className="text-sm text-purple-100 mb-3">Redis-powered instant responses</p>
+                  <h4 className="font-bold text-base sm:text-lg mb-1 sm:mb-2">Lightning Fast</h4>
+                  <p className="text-xs sm:text-sm text-purple-100 mb-2 sm:mb-3">Redis-powered instant responses</p>
                   <div className="text-xs text-purple-200 space-y-1">
                     <p>• Sub-second Response Time</p>
                     <p>• Intelligent Caching</p>
@@ -463,12 +463,12 @@ export default function PageLayout({ children }: PageLayoutProps) {
                   </div>
                 </Card>
                 
-                <Card className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white text-center shadow-2xl border border-green-400/20">
-                  <div className="flex justify-center mb-3">
-                    <Target className="w-8 h-8" />
+                <Card className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-4 sm:p-6 text-white text-center shadow-2xl border border-green-400/20">
+                  <div className="flex justify-center mb-2 sm:mb-3">
+                    <Target className="w-6 h-6 sm:w-8 sm:h-8" />
                   </div>
-                  <h4 className="font-bold text-lg mb-2">Personalized Learning</h4>
-                  <p className="text-sm text-green-100 mb-3">Adaptive algorithms for every student</p>
+                  <h4 className="font-bold text-base sm:text-lg mb-1 sm:mb-2">Personalized Learning</h4>
+                  <p className="text-xs sm:text-sm text-green-100 mb-2 sm:mb-3">Adaptive algorithms for every student</p>
                   <div className="text-xs text-green-200 space-y-1">
                     <p>• Learning Style Analysis</p>
                     <p>• Progress Tracking</p>
@@ -476,12 +476,12 @@ export default function PageLayout({ children }: PageLayoutProps) {
                   </div>
                 </Card>
                 
-                <Card className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 text-white text-center shadow-2xl border border-orange-400/20">
-                  <div className="flex justify-center mb-3">
-                    <Shield className="w-8 h-8" />
+                <Card className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-4 sm:p-6 text-white text-center shadow-2xl border border-orange-400/20">
+                  <div className="flex justify-center mb-2 sm:mb-3">
+                    <Shield className="w-6 h-6 sm:w-8 sm:h-8" />
                   </div>
-                  <h4 className="font-bold text-lg mb-2">Enterprise Security</h4>
-                  <p className="text-sm text-orange-100 mb-3">Firebase-powered data protection</p>
+                  <h4 className="font-bold text-base sm:text-lg mb-1 sm:mb-2">Enterprise Security</h4>
+                  <p className="text-xs sm:text-sm text-orange-100 mb-2 sm:mb-3">Firebase-powered data protection</p>
                   <div className="text-xs text-orange-200 space-y-1">
                     <p>• End-to-End Encryption</p>
                     <p>• GDPR Compliant</p>
@@ -489,12 +489,12 @@ export default function PageLayout({ children }: PageLayoutProps) {
                   </div>
                 </Card>
                 
-                <Card className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl p-6 text-white text-center shadow-2xl border border-pink-400/20">
-                  <div className="flex justify-center mb-3">
-                    <MessageCircle className="w-8 h-8" />
+                <Card className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl p-4 sm:p-6 text-white text-center shadow-2xl border border-pink-400/20">
+                  <div className="flex justify-center mb-2 sm:mb-3">
+                    <MessageCircle className="w-6 h-6 sm:w-8 sm:h-8" />
                   </div>
-                  <h4 className="font-bold text-lg mb-2">Interactive Dialogue</h4>
-                  <p className="text-sm text-pink-100 mb-3">Real-time conversational learning</p>
+                  <h4 className="font-bold text-base sm:text-lg mb-1 sm:mb-2">Interactive Dialogue</h4>
+                  <p className="text-xs sm:text-sm text-pink-100 mb-2 sm:mb-3">Real-time conversational learning</p>
                   <div className="text-xs text-pink-200 space-y-1">
                     <p>• Socratic Questioning</p>
                     <p>• Dynamic Follow-ups</p>
@@ -502,12 +502,12 @@ export default function PageLayout({ children }: PageLayoutProps) {
                   </div>
                 </Card>
                 
-                <Card className="bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl p-6 text-white text-center shadow-2xl border border-teal-400/20">
-                  <div className="flex justify-center mb-3">
-                    <BarChart3 className="w-8 h-8" />
+                <Card className="bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl p-4 sm:p-6 text-white text-center shadow-2xl border border-teal-400/20">
+                  <div className="flex justify-center mb-2 sm:mb-3">
+                    <BarChart3 className="w-6 h-6 sm:w-8 sm:h-8" />
                   </div>
-                  <h4 className="font-bold text-lg mb-2">Analytics Dashboard</h4>
-                  <p className="text-sm text-teal-100 mb-3">Comprehensive learning insights</p>
+                  <h4 className="font-bold text-base sm:text-lg mb-1 sm:mb-2">Analytics Dashboard</h4>
+                  <p className="text-xs sm:text-sm text-teal-100 mb-2 sm:mb-3">Comprehensive learning insights</p>
                   <div className="text-xs text-teal-200 space-y-1">
                     <p>• Performance Metrics</p>
                     <p>• Learning Analytics</p>
@@ -515,12 +515,12 @@ export default function PageLayout({ children }: PageLayoutProps) {
                   </div>
                 </Card>
                 
-                <Card className="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl p-6 text-white text-center shadow-2xl border border-indigo-400/20">
-                  <div className="flex justify-center mb-3">
-                    <Globe className="w-8 h-8" />
+                <Card className="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl p-4 sm:p-6 text-white text-center shadow-2xl border border-indigo-400/20">
+                  <div className="flex justify-center mb-2 sm:mb-3">
+                    <Globe className="w-6 h-6 sm:w-8 sm:h-8" />
                   </div>
-                  <h4 className="font-bold text-lg mb-2">Multi-Platform</h4>
-                  <p className="text-sm text-indigo-100 mb-3">Seamless cross-device experience</p>
+                  <h4 className="font-bold text-base sm:text-lg mb-1 sm:mb-2">Multi-Platform</h4>
+                  <p className="text-xs sm:text-sm text-indigo-100 mb-2 sm:mb-3">Seamless cross-device experience</p>
                   <div className="text-xs text-indigo-200 space-y-1">
                     <p>• Responsive Design</p>
                     <p>• Mobile Optimized</p>
@@ -528,12 +528,12 @@ export default function PageLayout({ children }: PageLayoutProps) {
                   </div>
                 </Card>
                 
-                <Card className="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-6 text-white text-center shadow-2xl border border-red-400/20">
-                  <div className="flex justify-center mb-3">
-                    <GraduationCap className="w-8 h-8" />
+                <Card className="bg-gradient-to-br from-red-500 to-red-600 rounded-xl p-4 sm:p-6 text-white text-center shadow-2xl border border-red-400/20">
+                  <div className="flex justify-center mb-2 sm:mb-3">
+                    <GraduationCap className="w-6 h-6 sm:w-8 sm:h-8" />
                   </div>
-                  <h4 className="font-bold text-lg mb-2">Educational Focus</h4>
-                  <p className="text-sm text-red-100 mb-3">Pedagogy-driven design principles</p>
+                  <h4 className="font-bold text-base sm:text-lg mb-1 sm:mb-2">Educational Focus</h4>
+                  <p className="text-xs sm:text-sm text-red-100 mb-2 sm:mb-3">Pedagogy-driven design principles</p>
                   <div className="text-xs text-red-200 space-y-1">
                     <p>• Research-Based Methods</p>
                     <p>• Curriculum Alignment</p>
@@ -543,8 +543,8 @@ export default function PageLayout({ children }: PageLayoutProps) {
               </CardSwap>
             </div>
             
-            <div className="text-center mt-12">
-              <p className="text-gray-400 text-sm max-w-2xl mx-auto">
+            <div className="text-center mt-8 sm:mt-12">
+              <p className="text-gray-400 text-xs sm:text-sm max-w-2xl mx-auto px-2">
                 Each feature is meticulously crafted to enhance the learning experience, 
                 combining cutting-edge AI technology with proven educational methodologies.
               </p>
@@ -553,12 +553,12 @@ export default function PageLayout({ children }: PageLayoutProps) {
         </section>
 
         {/* Technical Features Section */}
-        <section className="w-full py-12 px-6">
-          <div className="max-w-6xl mx-auto mb-8">
-            <h2 className="text-3xl font-bold text-center mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+        <section className="w-full py-8 sm:py-20">
+          <div className="max-w-6xl mx-auto mb-6 sm:mb-8">
+            <h2 className="text-2xl sm:text-3xl font-bold text-center mb-3 sm:mb-4 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               Powered by Advanced Technology
             </h2>
-            <p className="text-gray-300 text-center max-w-3xl mx-auto">
+            <p className="text-gray-300 text-center max-w-3xl mx-auto text-sm sm:text-base px-2">
               Experience the cutting-edge AI infrastructure that makes Socratic learning possible
             </p>
           </div>
@@ -566,51 +566,54 @@ export default function PageLayout({ children }: PageLayoutProps) {
         </section>
 
         {/* Interactive Payment Support Section */}
-        <section className="w-full py-16 px-6 relative overflow-hidden">
+        <section className="w-full py-12 sm:py-16 px-4 sm:px-6 relative overflow-hidden">
           <div className="max-w-6xl mx-auto">
             {/* Main Content */}
             <div className="text-center relative z-10">              
-              <div className="mb-8">
+              <div className="mb-6 sm:mb-8">
                 <BlurText 
                   text="Help Keep This AI Magic Alive!"
-                  className="text-2xl font-semibold text-white mb-4"
+                  className="text-xl sm:text-2xl font-semibold text-white mb-4"
                   delay={50}
                 />
               </div>
 
               {/* Payment Options Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-12">
             {paymentOptions.map((option) => (
               <SpotlightCard 
                 key={option.id}
-                className={`bg-gradient-to-br ${option.gradient} ${option.border} p-6 rounded-xl backdrop-blur-sm hover:scale-105 transition-all duration-300`}
+                className={`bg-gradient-to-br ${option.gradient} ${option.border} p-4 sm:p-6 rounded-xl backdrop-blur-sm hover:scale-105 transition-all duration-300`}
                 spotlightColor={option.spotlightColor}
               >
                 <div className="text-center">
                   {/* QR Code */}
-                  <div className="mb-6">
+                  <div className="mb-4 sm:mb-6">
                     <img 
                       src={option.qrCode} 
                       alt={`${option.title} QR Code`} 
-                      className={`w-40 h-40 mx-auto rounded-lg border-2 ${option.border}`}
+                      className={`w-32 h-32 sm:w-40 sm:h-40 mx-auto rounded-lg border-2 ${option.border}`}
                     />
                   </div>
 
                   {/* Icon and Title */}
-                  <div className="mb-4">
+                  <div className="mb-3 sm:mb-4">
                     {option.icon}
                   </div>
-                  <h3 className="text-2xl font-bold text-white mb-2">{option.title}</h3>
-                  <p className={`${option.textColor} text-sm mb-4`}>{option.description}</p>
-                  <p className="text-3xl font-bold text-white mb-6">{option.amount}</p>
+                  <h3 className="text-lg sm:text-2xl font-bold text-white mb-2">
+                    <span className="hidden sm:inline">{option.title}</span>
+                    <span className="sm:hidden">{option.title.split(' ')[0]} {option.title.split(' ')[1]}</span>
+                  </h3>
+                  <p className={`${option.textColor} text-xs sm:text-sm mb-3 sm:mb-4`}>{option.description}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-white mb-4 sm:mb-6">{option.amount}</p>
 
                   {/* Payment Methods */}
-                  <div className="space-y-3">
+                  <div className="space-y-2 sm:space-y-3">
                     {/* QR Code Payment */}
-                    <div className={`bg-black/30 p-3 rounded-lg border ${option.border}`}>
+                    <div className={`bg-black/30 p-2 sm:p-3 rounded-lg border ${option.border}`}>
                       <div className="flex items-center justify-center space-x-2">
-                        <QrCode className="w-5 h-5 text-gray-300" />
-                        <span className="text-sm text-gray-300">Scan QR Code</span>
+                        <QrCode className="w-4 h-4 sm:w-5 sm:h-5 text-gray-300" />
+                        <span className="text-xs sm:text-sm text-gray-300">Scan QR Code</span>
                       </div>
                     </div>
 
@@ -619,19 +622,23 @@ export default function PageLayout({ children }: PageLayoutProps) {
                       href={option.razorpayLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`block bg-gradient-to-r from-slate-700 via-gray-700 to-slate-700 hover:from-slate-600 hover:via-gray-600 hover:to-slate-600 p-3 rounded-lg transition-all duration-300 transform hover:scale-105 border-slate-600`}
+                      className={`block bg-gradient-to-r from-slate-700 via-gray-700 to-slate-700 hover:from-slate-600 hover:via-gray-600 hover:to-slate-600 p-2 sm:p-3 rounded-lg transition-all duration-300 transform hover:scale-105 border-slate-600`}
                     >
                       <div className="flex items-center justify-center space-x-2">
-                        <CreditCard className="w-5 h-5 text-white" />
-                        <span className="text-sm text-white font-semibold">Pay with Razorpay</span>
-                        <ExternalLink className="w-4 h-4 text-white" />
+                        <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                        <span className="text-xs sm:text-sm text-white font-semibold">
+                          <span className="hidden sm:inline">Pay with Razorpay</span>
+                          <span className="sm:hidden">Pay Now</span>
+                        </span>
+                        <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                       </div>
                     </a>
                   </div>
 
                   {/* Note */}
-                  <p className={`${option.textColor} text-xs mt-4 opacity-75`}>
-                    Choose any payment method that works for you
+                  <p className={`${option.textColor} text-xs mt-3 sm:mt-4 opacity-75`}>
+                    <span className="hidden sm:inline">Choose any payment method that works for you</span>
+                    <span className="sm:hidden">Choose your preferred method</span>
                   </p>
                 </div>
               </SpotlightCard>
@@ -639,24 +646,24 @@ export default function PageLayout({ children }: PageLayoutProps) {
           </div>
 
               {/* Fun Message */}
-              <div className="relative mb-8">
+              <div className="relative mb-6 sm:mb-8">
                 <BlurText 
                   text="Every contribution, no matter how small, makes a huge difference!"
-                  className="text-gray-300 text-lg mb-4"
+                  className="text-gray-300 text-base sm:text-lg mb-4 px-2"
                   delay={50}
                 />
               </div>
 
               {/* Custom Amount Carousel */}
-              <div className="mb-8">
-                <h3 className="text-2xl font-bold text-white mb-4">
+              <div className="mb-6 sm:mb-8">
+                <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4">
                   Or Choose Your Own Amount
                 </h3>
                 <div className="flex justify-center items-center mx-auto">
                   <div className="mx-auto">
                     <Carousel 
                       items={paymentItems}
-                      baseWidth={400}
+                      baseWidth={320}
                       autoplay={true}
                       autoplayDelay={3000}
                       pauseOnHover={true}
@@ -670,10 +677,11 @@ export default function PageLayout({ children }: PageLayoutProps) {
               <div className="text-center">
                 <a 
                   href="/support" 
-                  className="inline-flex items-center space-x-2 bg-gradient-to-r from-slate-700 via-gray-700 to-slate-700 hover:from-slate-600 hover:via-gray-600 hover:to-slate-600 border-slate-600 px-6 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 text-white font-semibold"
+                  className="inline-flex items-center space-x-2 bg-gradient-to-r from-slate-700 via-gray-700 to-slate-700 hover:from-slate-600 hover:via-gray-600 hover:to-slate-600 border-slate-600 px-4 sm:px-6 py-2 sm:py-3 rounded-lg transition-all duration-300 transform hover:scale-105 text-white font-semibold text-sm sm:text-base"
                 >
-                  <Heart className="w-5 h-5" />
-                  <span>View All Payment Options</span>
+                  <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="hidden sm:inline">View All Payment Options</span>
+                  <span className="sm:hidden">All Options</span>
                 </a>
               </div>
             </div>

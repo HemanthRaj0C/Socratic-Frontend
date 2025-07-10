@@ -70,7 +70,7 @@ export default function NotFoundPage() {
         {Array.from({ length: 8 }).map((_, i) => (
           <div
             key={i}
-            className="absolute animate-float opacity-20"
+            className="absolute animate-float opacity-20 hidden sm:block"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -78,18 +78,18 @@ export default function NotFoundPage() {
               animationDuration: `${4 + Math.random() * 2}s`
             }}
           >
-            <HelpCircle className="w-6 h-6 text-red-400" />
+            <HelpCircle className="w-4 h-4 sm:w-6 sm:h-6 text-red-400" />
           </div>
         ))}
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6">
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 sm:px-6">
         <div className="text-center">
             {/* Header with Glitch Effect */}
-            <div className='flex justify-center items-center my-6'>
+            <div className='flex justify-center items-center my-4 sm:my-6'>
                 <FuzzyText
-                    fontSize="8rem"
+                    fontSize="4rem sm:6rem md:8rem"
                     fontWeight={900}
                     color="#ff6b35"
                     enableHover={true}
@@ -100,37 +100,37 @@ export default function NotFoundPage() {
                 </FuzzyText>
             </div>
 
-          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-red-400 to-orange-400 bg-clip-text text-transparent leading-tight">
             Oops! <br /> Page Not Found
           </h1>
-          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-6 sm:mb-8 max-w-2xl mx-auto px-2">
             Looks like this page went on its own learning adventure! 
             Let's get you back to exploring with our AI tutor.
           </p>
         </div>
 
         {/* Main Action Card */}
-        <div className="">
+        <div className="w-full max-w-sm sm:max-w-md">
           <SpotlightCard 
-            className="p-8 bg-black/40 backdrop-blur-lg border border-red-500/30 rounded-2xl max-w-md"
+            className="p-6 sm:p-8 bg-black/40 backdrop-blur-lg border border-red-500/30 rounded-2xl"
             spotlightColor="rgba(239, 68, 68, 0.4)"
           >
-            <div className="text-center space-y-6">
+            <div className="text-center space-y-4 sm:space-y-6">
               {/* Animated Brain Icon */}
               <div className="relative">
                 <div className="animate-pulse">
-                  <Brain className="w-16 h-16 text-red-400 mx-auto" />
+                  <Brain className="w-12 h-12 sm:w-16 sm:h-16 text-red-400 mx-auto" />
                 </div>
                 <div className="absolute inset-0 animate-ping opacity-30">
-                  <Brain className="w-16 h-16 text-red-400 mx-auto" />
+                  <Brain className="w-12 h-12 sm:w-16 sm:h-16 text-red-400 mx-auto" />
                 </div>
               </div>
 
               <div>
-                <h2 className="text-2xl font-bold mb-2 text-white">
+                <h2 className="text-xl sm:text-2xl font-bold mb-2 text-white">
                   Don't worry, let's keep learning!
                 </h2>
-                <p className="text-gray-300 text-sm">
+                <p className="text-gray-300 text-xs sm:text-sm">
                   Every mistake is a learning opportunity. Our AI tutor is ready to help you discover new knowledge.
                 </p>
               </div>
@@ -139,10 +139,10 @@ export default function NotFoundPage() {
               <div className="space-y-3">
                 <button
                   onClick={() => router.push('/chat')}
-                  className="w-full group relative px-6 py-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 overflow-hidden"
+                  className="w-full group relative px-4 sm:px-6 py-3 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 overflow-hidden text-sm sm:text-base"
                 >
                   <div className="relative z-10 flex items-center justify-center space-x-2">
-                    <MessageCircle className="w-5 h-5" />
+                    <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
                     <span>Start Learning Now</span>
                   </div>
                   <div className="absolute inset-0 -skew-x-12 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
@@ -150,9 +150,9 @@ export default function NotFoundPage() {
 
                 <button
                   onClick={() => router.back()}
-                  className="w-full px-6 py-3 border border-gray-600 hover:border-gray-500 rounded-xl font-semibold transition-all duration-300 hover:bg-white/5 flex items-center justify-center space-x-2"
+                  className="w-full px-4 sm:px-6 py-3 border border-gray-600 hover:border-gray-500 rounded-xl font-semibold transition-all duration-300 hover:bg-white/5 flex items-center justify-center space-x-2 text-sm sm:text-base"
                 >
-                  <ArrowLeft className="w-4 h-4" />
+                  <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
                   <span>Go Back</span>
                 </button>
               </div>
